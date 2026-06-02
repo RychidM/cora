@@ -58,8 +58,19 @@ On macOS with the vault in iCloud:
 export AGENT_MEMORY_VAULT="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/<your-vault>"
 ```
 
-If the env var isn't set, the plugin tries the Filesystem MCP's allowed
-directories, then falls back to `~/obsidian-memory-vault`.
+**The env var must be visible to the agent's process, not just your
+terminal.** A skill reads it by running `echo "$AGENT_MEMORY_VAULT"`, so the
+variable has to be exported in the environment that launched Claude — put the
+`export` in your shell profile (`~/.zshrc`) and start Claude Code from that
+shell. Setting it in an unrelated terminal after Claude is already running has
+no effect.
+
+**Claude desktop has no shell**, so the env var can't be read there. Add the
+vault to the Filesystem MCP's allowed directories instead — the plugin then
+locates it via `list_allowed_directories`.
+
+If neither resolves, the plugin falls back to `~/obsidian-memory-vault`, and
+if that doesn't exist it stops and asks rather than writing to a guessed path.
 
 ---
 

@@ -20,10 +20,12 @@ has to copy-paste between files.
 
 ## Step 1 — Locate the vault and read the log
 
-Resolve vault root (same as `vault-logger`):
-1. `$AGENT_MEMORY_VAULT` env var
-2. `list_allowed_directories` (Filesystem MCP)
-3. Default: `~/obsidian-memory-vault`
+Resolve vault root the same way as `vault-logger` Step 1 — actively read
+`$AGENT_MEMORY_VAULT` (run `echo "${AGENT_MEMORY_VAULT:-}"`; the value is
+not visible otherwise), then fall back to `list_allowed_directories`
+(Filesystem MCP), then `~/obsidian-memory-vault`. Confirm
+`_logs/PENDING_REVIEW.md` exists before proceeding; if the vault can't be
+located, stop and ask RM rather than guessing.
 
 Read `{vault_root}/_logs/PENDING_REVIEW.md` and parse into entries.
 Each entry is delimited by `---` lines: a YAML-ish header block, then

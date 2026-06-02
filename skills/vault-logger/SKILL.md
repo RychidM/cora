@@ -20,12 +20,30 @@ approved entries to their destinations.
 
 ## Step 1 — Locate the vault
 
-Resolve vault root in this order:
+You must actively resolve the vault root — do not assume a path. Reading
+the `$AGENT_MEMORY_VAULT` env var requires running a command; the value is
+not visible to you otherwise. Resolve in this order and stop at the first
+hit:
 
-1. `$AGENT_MEMORY_VAULT` environment variable, if set
-2. `list_allowed_directories` (Filesystem MCP) — the allowed directory
-   containing `_logs/PENDING_REVIEW.md`
-3. Default: `~/obsidian-memory-vault`
+1. **Env var (Claude Code / any agent with a shell).** Run:
+
+   ```bash
+   echo "${AGENT_MEMORY_VAULT:-}"
+   ```
+
+   If it prints a non-empty path, that is the vault root.
+
+2. **Filesystem MCP (Claude desktop, no shell).** Call
+   `list_allowed_directories` and pick the allowed directory that
+   contains `_logs/PENDING_REVIEW.md`.
+
+3. **Default.** `~/obsidian-memory-vault`.
+
+Before using the resolved root, confirm `{vault_root}/_logs/PENDING_REVIEW.md`
+exists. If none of the above yields a valid vault, stop and tell RM the
+vault could not be located — ask them to set `AGENT_MEMORY_VAULT` (and, for
+Claude desktop, add the vault to the Filesystem MCP allowed directories)
+rather than writing to a guessed path.
 
 The log path is `{vault_root}/_logs/PENDING_REVIEW.md`.
 

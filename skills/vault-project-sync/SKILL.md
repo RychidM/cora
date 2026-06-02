@@ -20,7 +20,18 @@ when shell scripts can't run (e.g. from Claude desktop).
 
 ---
 
-## Step 1 — Determine target repo
+## Step 1 — Locate the vault
+
+Resolve vault root (see `vault-logger` Step 1): actively read
+`$AGENT_MEMORY_VAULT` (run `echo "${AGENT_MEMORY_VAULT:-}"`; the value is not
+visible otherwise), then fall back to `list_allowed_directories` (Filesystem
+MCP), then `~/obsidian-memory-vault`. Confirm `{vault_root}/AGENTS.md` exists
+before proceeding; if the vault can't be located, stop and ask RM rather than
+guessing.
+
+---
+
+## Step 2 — Determine target repo
 
 From the conversation:
 - If RM names a project (e.g. "sync agentwatch-relay"), look up its repo
@@ -32,7 +43,7 @@ Determine the project name from the repo's folder name (basename).
 
 ---
 
-## Step 2 — Find the matching vault project
+## Step 3 — Find the matching vault project
 
 Search for a folder matching the project name:
 1. `projects/{name}/` — top-level
@@ -49,7 +60,7 @@ context was attached.
 
 ---
 
-## Step 3 — Build the agent file content
+## Step 4 — Build the agent file content
 
 Concatenate, in this order:
 
@@ -84,7 +95,7 @@ If the project is a module:
 
 ---
 
-## Step 4 — Write the agent files
+## Step 5 — Write the agent files
 
 Write the assembled content to each of these paths in the repo:
 
@@ -99,7 +110,7 @@ Create intermediate directories as needed.
 
 ---
 
-## Step 5 — Ensure .gitignore covers the generated files
+## Step 6 — Ensure .gitignore covers the generated files
 
 Read `{repo}/.gitignore`. If it doesn't already contain the agent-files
 block, append:
@@ -117,7 +128,7 @@ If the `.gitignore` doesn't exist, create it with just this block.
 
 ---
 
-## Step 6 — Report
+## Step 7 — Report
 
 ```
 Synced to {repo_name}:
