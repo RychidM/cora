@@ -1,0 +1,115 @@
+{
+  "name": "rm-memory-vault",
+  "displayName": "RM Memory Vault",
+  "version": "1.1.0",
+  "description": "Skills and slash commands for managing RM's Obsidian-based memory vault with any Claude agent. Log ideas, promote approved entries, init projects, sync agent files, and search the vault — all from chat.",
+  "author": {
+    "name": "RM",
+    "url": "https://github.com/RychidM"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RychidM/rm-memory-vault-plugin"
+  },
+  "homepage": "https://github.com/RychidM/rm-memory-vault-plugin#readme",
+  "keywords": [
+    "obsidian",
+    "memory",
+    "vault",
+    "agent",
+    "knowledge-management",
+    "claude-code",
+    "claude-desktop"
+  ],
+  "compatibility": {
+    "claude-code": ">=1.0.0",
+    "claude-desktop": ">=1.0.0"
+  },
+  "config": {
+    "vault_path_env": "AGENT_MEMORY_VAULT",
+    "vault_path_fallback": "~/obsidian-memory-vault"
+  },
+  "skills": [
+    {
+      "id": "vault-logger",
+      "path": "skills/vault-logger/SKILL.md",
+      "description": "Append a structured entry to the pending review log."
+    },
+    {
+      "id": "vault-promoter",
+      "path": "skills/vault-promoter/SKILL.md",
+      "description": "Move approved log entries to their destination files."
+    },
+    {
+      "id": "vault-status",
+      "path": "skills/vault-status/SKILL.md",
+      "description": "Summarise current vault state — projects, pending entries, open issues."
+    },
+    {
+      "id": "vault-project-init",
+      "path": "skills/vault-project-init/SKILL.md",
+      "description": "Initialise a new project or module in the vault."
+    },
+    {
+      "id": "vault-project-sync",
+      "path": "skills/vault-project-sync/SKILL.md",
+      "description": "Generate or refresh agent files (CLAUDE.md, GEMINI.md, etc.) for a project repo."
+    },
+    {
+      "id": "vault-find",
+      "path": "skills/vault-find/SKILL.md",
+      "description": "Search the vault for entries by keyword or topic."
+    },
+    {
+      "id": "vault-log-archive",
+      "path": "skills/vault-log-archive/SKILL.md",
+      "description": "Archive promoted/discarded entries from the pending review log."
+    },
+    {
+      "id": "vault-review",
+      "path": "skills/vault-review/SKILL.md",
+      "description": "Apply review decisions to pending log entries (approve/discard/defer) from chat."
+    },
+    {
+      "id": "vault-read",
+      "path": "skills/vault-read/SKILL.md",
+      "description": "Read the full content of a vault file or entry."
+    },
+    {
+      "id": "vault-edit",
+      "path": "skills/vault-edit/SKILL.md",
+      "description": "Make a direct in-place edit to existing vault content."
+    },
+    {
+      "id": "vault-idea-status",
+      "path": "skills/vault-idea-status/SKILL.md",
+      "description": "Advance an idea's lifecycle status in the ideas files."
+    },
+    {
+      "id": "vault-project-status",
+      "path": "skills/vault-project-status/SKILL.md",
+      "description": "Set a project's lifecycle status or archive a finished project."
+    },
+    {
+      "id": "vault-move",
+      "path": "skills/vault-move/SKILL.md",
+      "description": "Rename a project or relocate a module, fixing all references."
+    }
+  ],
+  "commands": [
+    { "trigger": "/vault-log",      "skill": "vault-logger",       "description": "Log this to the vault" },
+    { "trigger": "/vault-promote",  "skill": "vault-promoter",     "description": "Promote approved log entries" },
+    { "trigger": "/vault-status",   "skill": "vault-status",       "description": "Show vault status" },
+    { "trigger": "/vault-init",     "skill": "vault-project-init", "description": "Initialise a new project" },
+    { "trigger": "/vault-sync",     "skill": "vault-project-sync", "description": "Sync vault to project repo" },
+    { "trigger": "/vault-find",     "skill": "vault-find",         "description": "Search the vault" },
+    { "trigger": "/vault-archive",  "skill": "vault-log-archive",  "description": "Archive old log entries" },
+    { "trigger": "/vault-review",   "skill": "vault-review",         "description": "Approve/discard/defer pending entries" },
+    { "trigger": "/vault-read",     "skill": "vault-read",           "description": "Read full content of a vault file or entry" },
+    { "trigger": "/vault-edit",     "skill": "vault-edit",           "description": "Edit existing vault content in place" },
+    { "trigger": "/vault-idea",     "skill": "vault-idea-status",    "description": "Advance an idea's lifecycle status" },
+    { "trigger": "/vault-project-status", "skill": "vault-project-status", "description": "Set project status or archive a project" },
+    { "trigger": "/vault-move",     "skill": "vault-move",           "description": "Rename a project or relocate a module" }
+  ]
+}

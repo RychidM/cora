@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+
+# Editor cruft
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build artifacts
+dist/
+*.zip
