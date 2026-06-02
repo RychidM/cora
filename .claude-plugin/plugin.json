@@ -8,10 +8,7 @@
     "url": "https://github.com/RychidM"
   },
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/RychidM/rm-memory-vault-plugin"
-  },
+  "repository": "https://github.com/RychidM/rm-memory-vault-plugin",
   "homepage": "https://github.com/RychidM/rm-memory-vault-plugin#readme",
   "keywords": [
     "obsidian",
