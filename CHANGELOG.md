@@ -1,5 +1,47 @@
 # Changelog
 
+## [1.2.0] — 2026-06-02
+
+Research layer support — the LLM Wiki pattern applied to the vault.
+
+The vault now has a top-level `research/` folder for accumulating
+external material (articles, framework docs, technical analyses, your
+own notes) and turning it into LLM-maintained topic synthesis pages.
+Ingest extracts key claims from a source and integrates them into one
+or more `research/topics/{slug}.md` pages, cross-linked with projects
+where relevant. Lint surfaces drift as the vault grows.
+
+### Skills
+- `vault-ingest` — process a source from `research/sources/` into one
+  or more topic synthesis pages. Discusses proposed topic targets with
+  RM before writing (Step 2 is collaborative by design). Updates the
+  topic page, the research index row, and appends to the ingest log.
+  Never edits the source or project files.
+- `vault-lint` — read-only diagnostic pass across eight checks: orphan
+  pages, missing topic pages, stale topics, unresolved source
+  conflicts, issues missing prevention, pending-review backlog,
+  `AGENTS.md` table drift, and broken `[[wikilinks]]`. Suggests, never
+  decides.
+
+### Commands
+- `/vault-ingest`, `/vault-lint`
+
+### Documentation
+- README: new "Research workflow" section, vault structure diagram
+  updated to include `research/`, skill table extended, operation
+  coverage matrix extended with the Research surface.
+- `docs/skills/`: per-skill reference cards for ingest and lint;
+  index gains a Research section.
+
+### Vault changes (separate from the plugin)
+- New `research/` folder created in the vault with
+  `sources/{articles,docs,analyses,notes}/`, `topics/`, and
+  `_logs/INGEST_LOG.md`
+- `research/_INDEX.md` topic catalog
+- README files in each `research/sources/*` subdirectory explaining
+  what belongs where
+- `AGENTS.md` updated to v1.3 with a Research Library section
+
 ## [1.1.0] — 2026-06-02
 
 Complete the agent operation surface — every vault area now has create,

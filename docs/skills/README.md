@@ -42,6 +42,13 @@ The authoritative behavior for each skill lives in its
 | [vault-project-sync](vault-project-sync.md) | `/vault-sync` | Write agent files into a project repo |
 | [vault-move](vault-move.md) | `/vault-move` | Rename a project or relocate a module |
 
+## Research
+
+| Skill | Command | One-liner |
+|-------|---------|-----------|
+| [vault-ingest](vault-ingest.md) | `/vault-ingest` | Process a source into topic synthesis pages |
+| [vault-lint](vault-lint.md) | `/vault-lint` | Diagnostic pass: orphans, stale topics, drift, conflicts |
+
 ---
 
 ## Shared conventions

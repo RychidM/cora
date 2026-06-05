@@ -91,6 +91,8 @@ if that doesn't exist it stops and asks rather than writing to a guessed path.
 | `vault-idea-status` | `/vault-idea` | Advance an idea's lifecycle status |
 | `vault-project-status` | `/vault-project-status` | Set project status or archive a project |
 | `vault-move` | `/vault-move` | Rename a project or relocate a module, fixing all references |
+| `vault-ingest` | `/vault-ingest` | Process a research source into topic synthesis pages |
+| `vault-lint` | `/vault-lint` | Health-check the vault (orphans, stale topics, drift) |
 
 You don't have to use the slash commands — skills auto-trigger on
 matching phrases ("log this", "promote approved", "search vault for X").
@@ -110,6 +112,7 @@ Every vault surface now has create / read / update / lifecycle coverage:
 | Issues | `vault-logger` → `vault-promoter` | `vault-find`, `vault-read` | `vault-edit`, `vault-promoter` (resolve) | — |
 | Brand | — | `vault-find`, `vault-read` | `vault-edit` | — |
 | Repo agent files | `vault-project-sync` | — | `vault-project-sync` | — |
+| Research | `vault-ingest` | `vault-find`, `vault-read`, `vault-lint` | `vault-ingest` (re-ingest) | — |
 
 ---
 
@@ -182,6 +185,25 @@ entry so it stays traceable. (New knowledge still goes through
   `[[wikilink]]`. Re-run the sync afterward — agent files go stale on a
   move.
 
+### Building up research
+
+Beyond logging your own thoughts, the vault accumulates **external
+research** — articles, framework docs, technical analyses, your reading
+notes — in a separate `research/` layer with immutable sources and
+LLM-maintained topic synthesis pages.
+
+- > "Ingest the article I just clipped." → `vault-ingest` reads the source,
+  proposes which topic page(s) to update, and after your go-ahead writes
+  the synthesis into `research/topics/{slug}.md`. Cross-links to relevant
+  projects.
+- > "Lint the vault." → `vault-lint` reports orphan pages, stale topics,
+  unresolved source conflicts, missing topic pages, review backlog, and
+  `AGENTS.md`/projects-folder drift. Read-only; fixes are your call.
+
+Source files are immutable from the moment they land. Topic pages
+evolve as new sources are ingested — the Summary is rewritten in full
+on each update, never appended to.
+
 ---
 
 ## Vault structure (expected)
@@ -203,11 +225,21 @@ obsidian-memory-vault/
 │       ├── PROGRESS.md
 │       └── {module}/         ← Nested modules
 ├── brand/                    ← Profile, aesthetic, goals
-└── ideas/
-    ├── technical.md
-    ├── product.md
-    ├── content.md
-    └── business.md
+├── ideas/
+│   ├── technical.md
+│   ├── product.md
+│   ├── content.md
+│   └── business.md
+└── research/
+    ├── _INDEX.md             ← Topic catalog
+    ├── _logs/
+    │   └── INGEST_LOG.md     ← Chronological ingest record
+    ├── sources/              ← Immutable raw material
+    │   ├── articles/
+    │   ├── docs/
+    │   ├── analyses/
+    │   └── notes/
+    └── topics/               ← LLM-maintained synthesis pages
 ```
 
 If you don't have this structure yet, the
