@@ -1,5 +1,57 @@
 # Changelog
 
+## [1.3.0] — 2026-06-02
+
+Session capture — carry chat working context into the vault.
+
+Discussions in chat (Claude desktop, Claude Code) often produce a
+working thread: a summary worth keeping, artifacts (code, diagrams,
+documents), and references (URLs, vault links, repo file paths). Until
+now, that thread either had to be promoted piece-by-piece via
+`vault-logger` or dumped as loose files into a project repo. The carry
+skill captures the whole thread as a single dated folder under
+`sessions/`, with subfolders for artifacts and references, and a
+flexible scope (project / idea / brand / research / general).
+
+### Skills
+- `vault-carry` — captures a chat session into `sessions/{YYYY-MM-DD}-{slug}/`
+  with `SESSION.md` + `artifacts/` + `references/`. Discusses the
+  proposal with RM before writing (slug, scope, what's an artifact
+  vs. a link-only reference). Updates `sessions/_INDEX.md`. Never
+  modifies project files or auto-promotes content.
+
+### Commands
+- `/vault-carry`
+
+### Documentation
+- README: new "Capturing chat sessions" workflow section, vault structure
+  diagram updated to include `sessions/`, skill table extended, operation
+  coverage matrix extended with the Sessions surface.
+- `docs/skills/`: per-skill reference card for `vault-carry`; index gains
+  a Sessions section.
+
+### Modified
+- `vault-lint` gains Check 9: stale active sessions (`status: active`
+  and `date:` >60 days old in `sessions/`). Read-only; flags for manual
+  archival to `sessions/_archive/`.
+
+### Vault changes (separate from the plugin)
+- New top-level `sessions/` folder with `_archive/` subfolder
+- `sessions/_INDEX.md` master catalog with Active and Archived tables
+- `sessions/_archive/README.md` describing the archive convention
+- `AGENTS.md` updated to v1.4 with a Sessions section
+
+### Design notes
+- Sessions are **flexibly scoped** via a single `scope:` field that maps
+  to a vault path (`projects/X`, `ideas/X`, `brand/X`,
+  `research/topics/X`, or `general`). Not every session ties to a project.
+- Sessions stay **opt-in for IDE context.** `vault-project-sync` does
+  not auto-include sessions in `CLAUDE.md`. From a project repo, ask the
+  agent to *load recent sessions for this project* when you want them.
+- Sessions never auto-promote. A decision in a session can be logged
+  with `vault-logger`; a carried reference can be ingested with
+  `vault-ingest`; both are explicit follow-ups.
+
 ## [1.2.0] — 2026-06-02
 
 Research layer support — the LLM Wiki pattern applied to the vault.

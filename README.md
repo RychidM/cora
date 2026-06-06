@@ -93,6 +93,7 @@ if that doesn't exist it stops and asks rather than writing to a guessed path.
 | `vault-move` | `/vault-move` | Rename a project or relocate a module, fixing all references |
 | `vault-ingest` | `/vault-ingest` | Process a research source into topic synthesis pages |
 | `vault-lint` | `/vault-lint` | Health-check the vault (orphans, stale topics, drift) |
+| `vault-carry` | `/vault-carry` | Capture a chat session (summary + artifacts + references) into `sessions/` |
 
 You don't have to use the slash commands — skills auto-trigger on
 matching phrases ("log this", "promote approved", "search vault for X").
@@ -113,6 +114,7 @@ Every vault surface now has create / read / update / lifecycle coverage:
 | Brand | — | `vault-find`, `vault-read` | `vault-edit` | — |
 | Repo agent files | `vault-project-sync` | — | `vault-project-sync` | — |
 | Research | `vault-ingest` | `vault-find`, `vault-read`, `vault-lint` | `vault-ingest` (re-ingest) | — |
+| Sessions | `vault-carry` | `vault-find`, `vault-read`, `vault-lint` | (manual edit) | (manual move to `_archive/`) |
 
 ---
 
@@ -204,6 +206,36 @@ Source files are immutable from the moment they land. Topic pages
 evolve as new sources are ingested — the Summary is rewritten in full
 on each update, never appended to.
 
+### Capturing chat sessions
+
+Ideas, debugging threads, and design discussions often happen in chat
+before they're ready to become project files or research entries.
+Rather than scatter loose files into your project repo or promote
+everything piece-by-piece, the carry skill captures the whole thread
+as one piece.
+
+- > "Carry this session." → `vault-carry` reads the conversation,
+  proposes a slug + scope (with you in the loop), then writes
+  `sessions/{YYYY-MM-DD}-{slug}/SESSION.md` plus an `artifacts/` folder
+  (code, diagrams, documents from the chat) and a `references/` folder
+  (external materials carried with the session). One folder per session.
+
+Scope is flexible — a session can be about a project, an idea
+(technical / product / content / business), a brand topic, a research
+topic, or `general`. Not every session ties to a project.
+
+- > "Load recent sessions for this project." — in an IDE, ask the agent
+  to pull sessions whose scope matches the current project. Sessions are
+  **not** auto-included in `CLAUDE.md`; loading is opt-in to keep agent
+  files predictable.
+
+A session can be promoted later — a decision logged via `vault-logger`,
+a carried article ingested via `vault-ingest`, an artifact moved into
+the project. The session itself stays as the historical trace.
+
+Sessions older than 60 days get flagged by `vault-lint` for manual
+archival to `sessions/_archive/`.
+
 ---
 
 ## Vault structure (expected)
@@ -240,6 +272,14 @@ obsidian-memory-vault/
     │   ├── analyses/
     │   └── notes/
     └── topics/               ← LLM-maintained synthesis pages
+
+sessions/
+├── _INDEX.md                 ← Active + archived catalog
+├── _archive/                 ← Sessions >60 days old
+└── {YYYY-MM-DD}-{slug}/      ← One folder per session
+    ├── SESSION.md            ← Summary, key points, links
+    ├── artifacts/            ← Code, diagrams, documents from the chat
+    └── references/           ← External materials carried with the session
 ```
 
 If you don't have this structure yet, the

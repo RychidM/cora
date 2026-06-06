@@ -98,6 +98,16 @@ the target file exists. Report broken links.
 This catches typos, renamed files, and links to files that were
 intended-but-not-yet-created.
 
+### Check 9 — Stale active sessions
+
+Scan `sessions/` (not `sessions/_archive/`). For each session folder
+whose `SESSION.md` has `status: active` and a `date:` more than 60
+days old, flag for manual archival.
+
+The lint never moves sessions — archival is a manual step. The flag
+includes the destination path so RM can drag-and-drop in Obsidian or
+run a shell `mv`.
+
 ---
 
 ## Step 3 — Format the report
@@ -145,6 +155,11 @@ Scanned {N} files in {duration}.
 - Oldest [PENDING] is 18 days old:
   "Architecture sketch for offline pairing"
   *Suggested action: triage*
+
+## 📄 Stale Active Sessions ({count})
+
+- `sessions/2026-03-15-some-discussion/` — active, 79 days old
+  *Suggested action: move to `sessions/_archive/` and set status: archived*
 
 ## 📋 Active Projects Table Drift ({count})
 

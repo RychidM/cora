@@ -46,6 +46,8 @@ None required. Optional focus argument scopes the report to one check:
 7. **Active Projects table drift** — `AGENTS.md` vs. `projects/` folders
    out of sync.
 8. **Broken wikilinks** — `[[...]]` pointing at files that don't exist.
+9. **Stale active sessions** — sessions in `sessions/` with `status: active`
+   and a `date:` more than 60 days old; flagged for manual archival.
 
 ## Key rules
 
@@ -60,5 +62,7 @@ None required. Optional focus argument scopes the report to one check:
 
 [vault-ingest](vault-ingest.md) — produces the topic pages this lint
 checks for staleness and conflicts.
+[vault-carry](vault-carry.md) — produces the sessions this lint checks
+for staleness.
 [vault-status](vault-status.md) — lighter-weight read of current vault
 state (counts, not diagnostics).

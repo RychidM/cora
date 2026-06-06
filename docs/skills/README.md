@@ -49,6 +49,12 @@ The authoritative behavior for each skill lives in its
 | [vault-ingest](vault-ingest.md) | `/vault-ingest` | Process a source into topic synthesis pages |
 | [vault-lint](vault-lint.md) | `/vault-lint` | Diagnostic pass: orphans, stale topics, drift, conflicts |
 
+## Sessions
+
+| Skill | Command | One-liner |
+|-------|---------|-----------|
+| [vault-carry](vault-carry.md) | `/vault-carry` | Capture a chat session (summary + artifacts + references) into `sessions/` |
+
 ---
 
 ## Shared conventions
