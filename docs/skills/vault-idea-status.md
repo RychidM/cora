@@ -38,5 +38,4 @@ Which idea, and its new state.
 ## Related
 
 Lifecycle sibling of [vault-project-status](vault-project-status.md).
-Ideas first arrive via [vault-logger](vault-logger.md) →
-[vault-promoter](vault-promoter.md).
+Ideas first arrive via [vault-logger](vault-logger.md).

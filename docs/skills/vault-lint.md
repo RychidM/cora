@@ -24,8 +24,8 @@ None required. Optional focus argument scopes the report to one check:
 
 ## Reads / writes
 
-- **Reads:** `AGENTS.md`, `_logs/PENDING_REVIEW.md`, every `.md` under
-  `projects/`, `research/topics/`, and `ideas/`, plus
+- **Reads:** `AGENTS.md`, every `.md` under `projects/` (incl.
+  `ACTIVITY.md`), `research/topics/`, and `ideas/`, plus
   `research/_logs/INGEST_LOG.md`.
 - **Writes:** nothing. Fixes are RM's call.
 
@@ -41,8 +41,9 @@ None required. Optional focus argument scopes the report to one check:
    in topic pages.
 5. **Issues missing prevention** — resolved issues whose Prevention
    section is empty.
-6. **Pending review backlog** — too many `[PENDING]`, too many
-   `[APPROVED]` waiting to promote, or any entry older than 14 days.
+6. **ACTIVITY.md health** — active projects/modules missing an
+   `ACTIVITY.md`, feeds gone stale while the project moves on, or
+   breadcrumbs whose link targets don't resolve.
 7. **Active Projects table drift** — `AGENTS.md` vs. `projects/` folders
    out of sync.
 8. **Broken wikilinks** — `[[...]]` pointing at files that don't exist.

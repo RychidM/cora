@@ -24,15 +24,20 @@ Argument forms: `/vault-init my-project [repo-path]`,
 
 ## Reads / writes
 
-- **Reads:** `projects/_TEMPLATE/` (OVERVIEW, STYLE, ISSUES, PROGRESS).
+- **Reads:** `projects/_TEMPLATE/` (OVERVIEW, STYLE, ISSUES, PROGRESS,
+  and ACTIVITY if present).
 - **Writes:** new `projects/{name}/` (or `projects/{parent}/{name}/`)
-  from the template with placeholders filled; registers rows in
-  `_INDEX.md` and `AGENTS.md`; appends `repo_path` to `.project-paths`.
+  from the template with placeholders filled — including an empty
+  `ACTIVITY.md` feed (created from the skeleton if the template lacks
+  one); registers rows in `_INDEX.md` and `AGENTS.md`; appends
+  `repo_path` to `.project-paths`.
 
 ## Key rules
 
 - Never overwrites an existing project folder.
 - Never invents placeholder content — leaves `*(Fill in)*` for RM.
+- Always creates an `ACTIVITY.md` so session-start reads and breadcrumbs
+  have a target; leaves it empty for the first `vault-logger` write.
 - Module nesting is one level deep.
 - Modules get a "System Context" block linking the parent OVERVIEW.
 

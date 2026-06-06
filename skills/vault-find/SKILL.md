@@ -37,10 +37,10 @@ substring match across both filenames and file contents):
 
 | Section | Path |
 |---------|------|
-| Projects | `projects/**/*.md` |
+| Projects | `projects/**/*.md` (incl. `ACTIVITY.md`) |
 | Ideas | `ideas/*.md` |
 | Brand | `brand/*.md` |
-| Pending log | `_logs/PENDING_REVIEW.md` |
+| Research | `research/topics/*.md`, `research/sources/**/*.md` |
 
 Use a shell `grep -ri` if available, or recursive file reads otherwise.
 
@@ -78,8 +78,9 @@ Found N matches for "{query}":
 ## Brand
 - (none)
 
-## Pending Log
-- [PENDING] {entry summary} ({date})
+## Research
+- **research/topics/{slug}.md** — {heading}
+  > {snippet}
 ```
 
 Cap at 10 results unless RM asks for more.

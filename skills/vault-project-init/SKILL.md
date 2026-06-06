@@ -39,7 +39,8 @@ Resolve vault root (see `vault-logger` Step 1).
 
 Template directory: `{vault_root}/projects/_TEMPLATE/`
 Required files in the template: `OVERVIEW.md`, `STYLE.md`, `ISSUES.md`,
-`PROGRESS.md`.
+`PROGRESS.md`. `ACTIVITY.md` may also be present; if it isn't, Step 3
+creates one from the skeleton.
 
 If the template doesn't exist, stop and ask RM.
 
@@ -70,6 +71,30 @@ This is a module of **{parent}**.
 → See [[../OVERVIEW]] for the full system architecture and cross-module
 decisions.
 ```
+
+### Create the ACTIVITY.md feed
+
+Every project and module gets an `ACTIVITY.md` so session-start reads and
+cross-module breadcrumbs have a target. If the template already supplied
+one, use it (with placeholders replaced as above). Otherwise create
+`{target_path}/ACTIVITY.md` from this skeleton:
+
+```markdown
+---
+type: activity
+project: {name}
+last_updated: {today}
+---
+
+# {Project Name} — Activity Feed
+
+> Chronological feed of work touching this project, including cross-module
+> breadcrumbs from siblings. Most recent at top.
+
+---
+```
+
+Leave it with no entries — the first `vault-logger` write populates it.
 
 ---
 
@@ -104,7 +129,7 @@ If `repo_path` is given:
 
 ```
 Initialised project: {name}
-  Vault folder: {target_path}
+  Vault folder: {target_path} (incl. empty ACTIVITY.md)
   Registered in: _INDEX.md, AGENTS.md
 
 Next:

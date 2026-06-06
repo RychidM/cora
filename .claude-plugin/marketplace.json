@@ -10,8 +10,8 @@
     {
       "name": "rm-memory-vault",
       "source": "./",
-      "description": "Skills and slash commands for managing RM's Obsidian-based memory vault with any Claude agent. Log ideas, promote approved entries, init projects, sync agent files, and search the vault — all from chat.",
-      "version": "1.5.0",
+      "description": "Skills and slash commands for managing RM's Obsidian-based memory vault with any Claude agent. Capture ideas and decisions via propose-then-write, init projects, sync agent files, and search the vault — all from chat.",
+      "version": "1.6.0",
       "author": {
         "name": "RM",
         "url": "https://github.com/RychidM"

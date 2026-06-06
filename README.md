@@ -1,18 +1,21 @@
 # RM Memory Vault — Claude Plugin
 
 A Claude plugin that turns RM's Obsidian-based memory vault into a
-first-class agent capability. Log ideas, promote reviewed entries, sync
-agent files to project repos, search the vault, and manage projects —
-all from chat with any Claude agent (Claude Code, Claude desktop).
+first-class agent capability. Capture ideas and decisions, sync agent
+files to project repos, search the vault, and manage projects — all from
+chat with any Claude agent (Claude Code, Claude desktop). Writes are
+proposed inline and land in their destination on your approval; there is
+no pending-review queue.
 
 ---
 
 ## What this plugin does
 
 The vault is a structured Obsidian repository that holds RM's projects,
-ideas, identity, and agent write-back log. Without this plugin, every
-operation on the vault is manual: copy entries, move them between files,
-update indexes, regenerate per-repo agent context, archive old entries.
+ideas, identity, research, and per-project activity feeds. Without this
+plugin, every operation on the vault is manual: write entries to the
+right file, propagate cross-module breadcrumbs, update indexes,
+regenerate per-repo agent context, archive old content.
 
 With this plugin installed, any Claude agent can do all of those things
 directly. Every action that touches the vault has a skill behind it, and
@@ -78,14 +81,11 @@ if that doesn't exist it stops and asks rather than writing to a guessed path.
 
 | Skill | Command | What it does |
 |-------|---------|--------------|
-| `vault-logger` | `/vault-log` | Append a structured entry to the pending review log |
-| `vault-promoter` | `/vault-promote` | Move `[APPROVED]` entries to their destination files |
-| `vault-status` | `/vault-status` | Show projects, open issues, pending log counts |
+| `vault-logger` | `/vault-log` | Propose an entry inline, then write it to its destination on approval (+ cross-module breadcrumbs) |
+| `vault-status` | `/vault-status` | Show projects, open issues, recent activity |
 | `vault-project-init` | `/vault-init` | Create a new project or module from the template |
 | `vault-project-sync` | `/vault-sync` | Write fresh `CLAUDE.md`/`GEMINI.md`/etc. to a repo |
-| `vault-find` | `/vault-find` | Search across projects, ideas, brand, log |
-| `vault-log-archive` | `/vault-archive` | Move promoted/discarded entries into monthly archives |
-| `vault-review` | `/vault-review` | Approve/discard/defer pending entries from chat |
+| `vault-find` | `/vault-find` | Search across projects, ideas, brand, research |
 | `vault-read` | `/vault-read` | Return the full content of a file or entry |
 | `vault-edit` | `/vault-edit` | Make a direct in-place edit to existing content |
 | `vault-idea-status` | `/vault-idea` | Advance an idea's lifecycle status |
@@ -98,7 +98,7 @@ if that doesn't exist it stops and asks rather than writing to a guessed path.
 | `vault-resume` | `/vault-resume` | Pick up any past session in a fresh chat (no project context assumed) |
 
 You don't have to use the slash commands — skills auto-trigger on
-matching phrases ("log this", "promote approved", "search vault for X").
+matching phrases ("log this", "what's been happening", "search vault for X").
 
 For a per-skill reference card (inputs, what each reads/writes, rules),
 see [`docs/skills/`](docs/skills/README.md).
@@ -109,10 +109,10 @@ Every vault surface now has create / read / update / lifecycle coverage:
 
 | Surface | Create | Read | Update | Lifecycle / remove |
 |---------|--------|------|--------|--------------------|
-| Pending log | `vault-logger` | `vault-status`, `vault-find`, `vault-read` | `vault-review`, `vault-promoter` | `vault-log-archive` |
-| Projects | `vault-project-init` | `vault-status`, `vault-read` | `vault-edit`, `vault-promoter`, `vault-move` (rename/relocate) | `vault-project-status` (incl. archive) |
-| Ideas | `vault-logger` → `vault-promoter` | `vault-find`, `vault-read` | `vault-edit` | `vault-idea-status` |
-| Issues | `vault-logger` → `vault-promoter` | `vault-find`, `vault-read` | `vault-edit`, `vault-promoter` (resolve) | — |
+| Projects | `vault-project-init` | `vault-status`, `vault-read` | `vault-logger`, `vault-edit`, `vault-move` (rename/relocate) | `vault-project-status` (incl. archive) |
+| Activity feeds | `vault-logger` (auto, on first write) | `vault-status`, `vault-read`, `vault-find` | `vault-logger` (breadcrumbs) | (manual trim) |
+| Ideas | `vault-logger` | `vault-find`, `vault-read` | `vault-edit` | `vault-idea-status` |
+| Issues | `vault-logger` | `vault-find`, `vault-read` | `vault-logger` (resolve), `vault-edit` | — |
 | Brand | — | `vault-find`, `vault-read` | `vault-edit` | — |
 | Repo agent files | `vault-project-sync` | — | `vault-project-sync` | — |
 | Research | `vault-ingest` | `vault-find`, `vault-read`, `vault-lint` | `vault-ingest` (re-ingest) | — |
@@ -122,52 +122,66 @@ Every vault surface now has create / read / update / lifecycle coverage:
 
 ## Typical workflow
 
-### The core loop — log → review → promote → archive
+### Capturing knowledge — propose, approve, write
+
+There is no pending-review queue. An entry goes straight to its
+destination once you approve it — **inline review is the review.**
 
 1. **During work**, in Claude Code or Claude desktop, say:
    > "Log this decision to my vault."
 
-   The `vault-logger` skill writes a `[PENDING]` entry to
-   `_logs/PENDING_REVIEW.md`.
+   The `vault-logger` skill resolves the destination from the entry type
+   (issues → `ISSUES.md`, decisions → `OVERVIEW.md`, ideas →
+   `ideas/{domain}.md`, etc.), works out any cross-module breadcrumbs,
+   and shows you the **full draft of every file it will touch**.
 
-2. **Later**, review each `[PENDING]` entry. Either open the vault in
-   Obsidian and change the status field, or do it from chat:
-   > "Approve the agentwatch entries, discard the rest."
+2. **You approve or edit in chat:**
+   > "Yes, write it." / "Change the summary to … then write."
 
-   The `vault-review` skill applies your decision in place.
+   The skill writes all destinations in one batched pass and confirms
+   exactly what landed where. Nothing is written without your approval.
 
-3. **Back in Claude**, say:
-   > "Promote approved entries."
-
-   The `vault-promoter` skill moves each `[APPROVED]` entry to its
-   destination file (issues to `ISSUES.md`, decisions to `OVERVIEW.md`,
-   ideas to `ideas/{domain}.md`, etc.) and marks them `[PROMOTED]`.
-
-4. **Periodically**, say:
-   > "Archive the log."
-
-   The `vault-log-archive` skill moves promoted/discarded entries into
-   `_logs/archive/YYYY-MM.md`, keeping the review log focused.
+For a submodule, the write automatically adds a breadcrumb to the
+parent's `ACTIVITY.md`; siblings get a breadcrumb only when the change
+explicitly `affects:` them. See **Activity & cross-module awareness**
+below.
 
 ### Looking things up
 
 - > "What did I note about pairing flow?" → `vault-find` returns ranked
-  snippets across projects, ideas, brand, and the log.
+  snippets across projects, ideas, brand, and research.
 - > "Show me the full agentwatch overview." → `vault-read` returns the
   complete file or entry, not just snippets.
-- > "Where do things stand?" → `vault-status` summarises projects, open
-  issues, and pending-log counts.
+- > "Where do things stand?" / "What's been happening?" → `vault-status`
+  summarises projects, open issues, and recent activity.
 
 ### Editing what already exists
 
-When something in the vault is wrong rather than new, skip the log:
+When something in the vault is wrong rather than new:
 
 > "Fix the typo in the agentwatch style guide."
 
-The `vault-edit` skill makes a surgical in-place edit, confirms a
-before → after first, and records the change as a `[PROMOTED]` context
-entry so it stays traceable. (New knowledge still goes through
-`vault-logger` so it gets reviewed.)
+The `vault-edit` skill makes a surgical in-place edit and confirms a
+before → after first. Traceability comes from version history. (New
+knowledge still goes through `vault-logger`, which resolves the
+destination and breadcrumbs for you.)
+
+### Activity & cross-module awareness
+
+Each project has an `ACTIVITY.md` — a chronological feed of work touching
+it, newest first. Two things keep it current:
+
+- **Every project-scoped write of type `issue`, `resolution`, `progress`,
+  or `decision`** (via `vault-logger`) adds an entry. (`context` and
+  `idea` writes don't — too noisy / domain-scoped.)
+- **Submodule writes propagate.** A write under a submodule (e.g.
+  `agentwatch-relay`) always adds a breadcrumb to the **parent's**
+  `ACTIVITY.md`. If the change `affects:` sibling submodules, each named
+  sibling gets a breadcrumb too — all batched into the same approval.
+
+At the start of a project session an agent reads the project's
+`ACTIVITY.md` (and the parent's, if it's a submodule) and surfaces the
+last few entries, so no one works blind to sibling or parent activity.
 
 ### Moving things through their lifecycle
 
@@ -231,7 +245,7 @@ topic, or `general`. Not every session ties to a project.
   **not** auto-included in `CLAUDE.md`; loading is opt-in to keep agent
   files predictable.
 
-A session can be promoted later — a decision logged via `vault-logger`,
+A session can be drawn down later — a decision written via `vault-logger`,
 a carried article ingested via `vault-ingest`, an artifact moved into
 the project. The session itself stays as the historical trace.
 
@@ -283,10 +297,7 @@ scope-agnostic.
 
 ```
 obsidian-memory-vault/
-├── AGENTS.md                 ← Global agent entry point
-├── _logs/
-│   ├── PENDING_REVIEW.md     ← Agent write-back log
-│   └── archive/              ← Monthly archives
+├── AGENTS.md                 ← Global agent entry point + Write Protocol
 ├── projects/
 │   ├── _INDEX.md
 │   ├── _TEMPLATE/            ← Template files used by /vault-init
@@ -296,6 +307,7 @@ obsidian-memory-vault/
 │       ├── STYLE.md
 │       ├── ISSUES.md
 │       ├── PROGRESS.md
+│       ├── ACTIVITY.md       ← Chronological feed + cross-module breadcrumbs
 │       └── {module}/         ← Nested modules
 ├── brand/                    ← Profile, aesthetic, goals
 ├── ideas/
@@ -329,20 +341,28 @@ up.
 
 ---
 
-## Status semantics
+## The write contract
 
-Entries in `_logs/PENDING_REVIEW.md` carry a status field:
+Every write to the vault — new or edit — passes one gate: **RM sees it
+before it lands.** `vault-logger` proposes the full draft of every file
+it will touch, waits for explicit approval, then writes all destinations
+in one batched pass. There is no pending-review log, no `status:` field,
+and no separate promote step — inline review *is* the review.
 
-| Status | Meaning |
-|--------|---------|
-| `[PENDING]` | Default. Not yet reviewed. |
-| `[APPROVED]` | RM has approved. Ready for promotion. |
-| `[PROMOTED]` | Agent has moved it to its destination. |
-| `[DISCARDED]` | RM said no. Agents ignore. |
-| `[DEFER]` | Revisit later. Agents ignore. |
+Entry types resolve to destinations like so:
 
-`vault-promoter` only touches `[APPROVED]` entries. It never deletes —
-archival is a separate step (`vault-log-archive`).
+| Type | Destination |
+|------|-------------|
+| `issue` | `projects/{project}/ISSUES.md` |
+| `resolution` | the matching issue in `ISSUES.md` |
+| `progress` | `projects/{project}/PROGRESS.md` |
+| `decision` | `projects/{project}/OVERVIEW.md` (Decisions) |
+| `context` | `projects/{project}/OVERVIEW.md` (Notes) |
+| `idea` | `ideas/{domain}.md` |
+
+`issue` / `resolution` / `progress` / `decision` writes also drop an
+activity breadcrumb (parent always, named siblings via `affects:`).
+The full contract lives in the vault's `AGENTS.md`.
 
 ---
 
@@ -351,17 +371,14 @@ archival is a separate step (`vault-log-archive`).
 - **Read-only skills** (`vault-status`, `vault-find`, `vault-read`) never
   write to the vault.
 - **Write skills** are append-only or transform-in-place — none ever
-  delete content. Archiving (`vault-log-archive`, `vault-project-status`)
-  relocates content, never destroys it.
-- **Review-gated by default.** The vault's normal flow is
-  `logger → review → promote`, so RM's approval stays in the loop.
-  `vault-review` only applies decisions RM states (it never approves on
-  RM's behalf) and `vault-edit` bypasses the log only with a
-  before → after confirmation, then records the change as a `[PROMOTED]`
-  context entry so every direct edit is traceable.
-- **Marker flips** (`[APPROVED]` → `[PROMOTED]`) use a schema-preserving
-  two-line anchor pattern to prevent accidental field deletion during
-  edits.
+  delete content. Archiving (`vault-project-status`) relocates content,
+  never destroys it.
+- **Approval-gated by default.** No write lands without RM seeing the
+  exact text first. `vault-logger` shows the full draft and waits;
+  `vault-edit` confirms a before → after for non-trivial changes.
+- **Cross-module awareness.** Submodule writes propagate to the parent
+  implicitly and to named siblings explicitly, batched into one approval,
+  so no module works blind to another.
 - **Module support**: projects can be nested one level deep
   (`projects/{parent}/{module}/`). The sync skill automatically includes
   parent OVERVIEW context for modules.

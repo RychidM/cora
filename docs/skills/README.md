@@ -9,20 +9,17 @@ The authoritative behavior for each skill lives in its
 
 ---
 
-## Capture & review loop
+## Capture
 
 | Skill | Command | One-liner |
 |-------|---------|-----------|
-| [vault-logger](vault-logger.md) | `/vault-log` | Append a `[PENDING]` entry to the review log |
-| [vault-review](vault-review.md) | `/vault-review` | Flip pending entries to approved/discarded/deferred |
-| [vault-promoter](vault-promoter.md) | `/vault-promote` | Move `[APPROVED]` entries to their destinations |
-| [vault-log-archive](vault-log-archive.md) | `/vault-archive` | Move promoted/discarded entries to monthly archives |
+| [vault-logger](vault-logger.md) | `/vault-log` | Propose an entry inline, then write it to its destination on approval (+ cross-module breadcrumbs) |
 
 ## Reading
 
 | Skill | Command | One-liner |
 |-------|---------|-----------|
-| [vault-status](vault-status.md) | `/vault-status` | Summarise projects, issues, pending counts |
+| [vault-status](vault-status.md) | `/vault-status` | Summarise projects, issues, recent activity |
 | [vault-find](vault-find.md) | `/vault-find` | Ranked snippet search across the vault |
 | [vault-read](vault-read.md) | `/vault-read` | Full content of one file or entry |
 
@@ -65,10 +62,10 @@ Several behaviors are common to every skill:
 
 - **Vault-root resolution** — `$AGENT_MEMORY_VAULT` → Filesystem MCP
   allowed dir → `~/obsidian-memory-vault`.
-- **Status semantics** — `[PENDING]` / `[APPROVED]` / `[PROMOTED]` /
-  `[DISCARDED]` / `[DEFER]` on log entries.
-- **Schema-preserving marker-flip** — status changes anchor on the
-  `summary:` + `status:` two-line pattern, one flip per edit.
+- **Propose-then-write** — writes are proposed inline and land in their
+  destination on RM's approval; there is no pending-review queue.
+- **Cross-module breadcrumbs** — submodule writes notify the parent
+  implicitly and named siblings (`affects:`) explicitly, via `ACTIVITY.md`.
 - **One-level nesting** — projects nest at most one deep
   (`projects/{parent}/{module}/`).
 - **Never delete** — write skills append, transform in place, or

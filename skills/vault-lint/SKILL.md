@@ -74,12 +74,18 @@ section is empty, `*(pending)*`, or `*(to be filled in)*`.
 
 These are issues that were fixed but where the lesson wasn't captured.
 
-### Check 6 — Pending review backlog
+### Check 6 — ACTIVITY.md health
 
-Read `_logs/PENDING_REVIEW.md`. Count entries by status. Flag if:
-- `[PENDING]` count > 10 → review queue is backing up
-- `[APPROVED]` count > 5 → entries are approved but not promoted
-- Oldest `[PENDING]` entry > 14 days old → entry has been sitting
+Every active project (and module) should have an `ACTIVITY.md` feed.
+Scan `projects/` (excluding `_TEMPLATE/` and `_archive/`) and flag:
+- **Missing feed** — a project/module folder with `OVERVIEW.md` but no
+  `ACTIVITY.md`. Session-start reads will have nothing to surface.
+- **Stale feed** — `ACTIVITY.md` whose newest entry (or `last_updated`
+  frontmatter) is >60 days old while the project's `PROGRESS.md` shows
+  more recent work → activity isn't being recorded.
+- **Orphaned breadcrumb** — a `[from {sibling}]` or `[{submodule}]`
+  breadcrumb whose `→ [[...]]` target file doesn't resolve (the source
+  entry was moved or never written).
 
 ### Check 7 — Active Projects table out of sync
 
@@ -148,13 +154,14 @@ Scanned {N} files in {duration}.
 - `agentwatch-desktop/ISSUES.md` [ISSUE-001] resolved 2026-05-12
   *Suggested action: fill in Prevention section*
 
-## 📥 Pending Review Backlog
+## 📒 ACTIVITY.md Health ({count})
 
-- [PENDING]: 12 entries (above threshold of 10)
-- [APPROVED]: 3 entries (within threshold)
-- Oldest [PENDING] is 18 days old:
-  "Architecture sketch for offline pairing"
-  *Suggested action: triage*
+- `projects/agentwatch/agentwatch-relay/` has `OVERVIEW.md` but no
+  `ACTIVITY.md`
+  *Suggested action: create the feed (next `vault-logger` write will, or scaffold now)*
+- `projects/agentwatch/ACTIVITY.md` newest entry 2026-03-15; project
+  `PROGRESS.md` has updates through 2026-06-02
+  *Suggested action: activity isn't being logged — confirm writes go through vault-logger*
 
 ## 📄 Stale Active Sessions ({count})
 

@@ -36,11 +36,11 @@ Map RM's request to a concrete path or sub-block:
 | a single idea ("the X idea") | the `### {title}` block inside the matching `ideas/*.md` |
 | a single issue ("ISSUE-003") | the `### [ISSUE-NNN]` block inside the project's `ISSUES.md` |
 | a brand file ("brand profile", "aesthetic") | `brand/{file}.md` |
-| a log entry ("the latest log entry") | the matching block in `_logs/PENDING_REVIEW.md` |
+| an activity feed ("agentwatch activity") | `projects/{project}/ACTIVITY.md` |
 | the index | `projects/_INDEX.md` or `AGENTS.md` |
 
-Project resolution (same as the promoter): try `projects/{name}/` first,
-then `projects/*/{name}/` for modules. Use the first match.
+Project resolution: try `projects/{name}/` first, then
+`projects/*/{name}/` for modules. Use the first match.
 
 If the target is ambiguous (multiple files/blocks match), list the
 candidates and ask. If nothing matches, say so and suggest the closest

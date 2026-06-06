@@ -17,12 +17,12 @@ ISSUE-003", "what's in my product ideas", "pull up the brand profile",
 ## Inputs
 
 What to read — a project file, idea domain, single idea, single issue,
-brand file, log entry, or index.
+brand file, activity feed, or index.
 
 ## Reads / writes
 
-- **Reads:** the one resolved target (project files, `ideas/*.md`,
-  `brand/*.md`, `_logs/PENDING_REVIEW.md`, `_INDEX.md`, `AGENTS.md`).
+- **Reads:** the one resolved target (project files incl. `ACTIVITY.md`,
+  `ideas/*.md`, `brand/*.md`, `_INDEX.md`, `AGENTS.md`).
 - **Writes:** nothing.
 
 ## Output

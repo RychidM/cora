@@ -19,13 +19,13 @@ The query. If ambiguous, asks what to search for.
 
 ## Reads / writes
 
-- **Reads:** `projects/**/*.md`, `ideas/*.md`, `brand/*.md`,
-  `_logs/PENDING_REVIEW.md`.
+- **Reads:** `projects/**/*.md` (incl. `ACTIVITY.md`), `ideas/*.md`,
+  `brand/*.md`, `research/**/*.md`.
 - **Writes:** nothing.
 
 ## Output
 
-Matches grouped by section (Projects / Ideas / Brand / Pending Log) with
+Matches grouped by section (Projects / Ideas / Brand / Research) with
 relative path, nearest heading, and a snippet. Capped at 10 unless asked
 for more.
 

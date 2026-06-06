@@ -21,14 +21,14 @@ plus the desired change.
 ## Reads / writes
 
 - **Reads:** the target file.
-- **Writes:** a surgical, uniquely-anchored replacement; then appends a
-  `[PROMOTED]` `context` record to `_logs/PENDING_REVIEW.md` for
-  traceability (unless RM opts out).
+- **Writes:** a surgical, uniquely-anchored replacement. Traceability
+  comes from version history, not a log record.
 
 ## Key rules
 
 - **Existing content only** — new knowledge goes through
-  [vault-logger](vault-logger.md) so it gets reviewed.
+  [vault-logger](vault-logger.md), which resolves the destination and
+  any cross-module breadcrumbs.
 - **Gated:** confirms a before → after before non-trivial writes
   (frontmatter, table headers, status fields, `AGENTS.md` / `_INDEX.md` /
   `brand/`).
@@ -38,5 +38,6 @@ plus the desired change.
 
 ## Related
 
-This is the one write skill that bypasses the review loop — which is why
-it's gated and self-logs. Read first with [vault-read](vault-read.md).
+For capturing *new* knowledge with destination + breadcrumb resolution,
+use [vault-logger](vault-logger.md). Read first with
+[vault-read](vault-read.md).

@@ -10,8 +10,8 @@ Summarise the current state of the vault.
 
 ## Triggers
 
-"vault status", "what's in my vault", "show pending", "what's open",
-"where do things stand", "vault summary".
+"vault status", "what's in my vault", "what's open", "what's been
+happening", "where do things stand", "vault summary".
 
 ## Inputs
 
@@ -19,14 +19,14 @@ None.
 
 ## Reads / writes
 
-- **Reads:** `projects/_INDEX.md`, `_logs/PENDING_REVIEW.md`, each
-  project's `ISSUES.md` and `PROGRESS.md`, `ideas/*.md`.
+- **Reads:** `projects/_INDEX.md`, each project's `ACTIVITY.md`,
+  `ISSUES.md` and `PROGRESS.md`, `ideas/*.md`.
 - **Writes:** nothing.
 
 ## Output
 
 - Projects table (status, phase, open-issue count).
-- Pending-review counts by status.
+- Recent activity across projects (newest first).
 - Active-idea counts by domain.
 
 ## Key rules

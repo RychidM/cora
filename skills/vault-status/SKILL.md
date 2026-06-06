@@ -2,17 +2,17 @@
 name: vault-status
 description: >
   Shows the current state of RM's memory vault — active projects, open
-  issues by project, and pending review log counts. Use this skill when
-  RM asks for vault status, what's pending, what's open, where things
-  stand, or any variation. Trigger phrases include: "vault status",
-  "what's in my vault", "show pending", "what's open", "where do things
-  stand", "vault summary".
+  issues by project, and recent cross-project activity. Use this skill
+  when RM asks for vault status, what's open, what's been happening,
+  where things stand, or any variation. Trigger phrases include: "vault
+  status", "what's in my vault", "what's open", "what's been happening",
+  "where do things stand", "vault summary".
 ---
 
 # Vault Status
 
 Produces a concise summary of the vault: projects with their statuses,
-open issue counts, pending review entries, and recent activity.
+open issue counts, active ideas, and recent activity across projects.
 
 ---
 
@@ -29,7 +29,7 @@ Read these files and extract the relevant data:
 | File | What to extract |
 |------|-----------------|
 | `projects/_INDEX.md` | Project list with statuses |
-| `_logs/PENDING_REVIEW.md` | Count entries by status |
+| `projects/{p}/ACTIVITY.md` (for each project) | Most recent few entries (date + type + summary) |
 | `projects/{p}/ISSUES.md` (for each project) | Count entries under "Open Issues" |
 | `projects/{p}/PROGRESS.md` (for each project) | `current_phase` from frontmatter |
 
@@ -50,13 +50,12 @@ Produce a single concise markdown report:
 |---------|--------|-------|-------------|
 | ...     | ...    | ...   | ...         |
 
-## Pending Review Log
+## Recent Activity
 
-- [PENDING]: N
-- [APPROVED]: N
-- [PROMOTED]: N
-- [DISCARDED]: N
-- [DEFER]: N
+Most recent entries across all projects' `ACTIVITY.md` feeds, newest first:
+
+- {date} `{project}` [{type}] {summary}
+- ...
 
 ## Active Ideas
 

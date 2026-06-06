@@ -3,24 +3,23 @@ name: vault-edit
 description: >
   Makes a direct, in-place edit to existing vault content — a project's
   OVERVIEW/STYLE/ISSUES/PROGRESS, an idea, a brand file, or the index —
-  when RM wants a change applied now rather than routed through the
-  pending-review log. Use when RM asks to edit, fix, update, correct,
-  reword, or change something that already exists in the vault. Trigger
-  phrases include: "fix the agentwatch overview", "update the style
-  guide", "correct that issue's description", "reword the brand profile",
-  "change the project status note". Confirm the change before writing and
-  record it in the log.
+  when RM wants a change to existing content applied now rather than
+  captured as a new entry via vault-logger. Use when RM asks to edit, fix,
+  update, correct, reword, or change something that already exists in the
+  vault. Trigger phrases include: "fix the agentwatch overview", "update
+  the style guide", "correct that issue's description", "reword the brand
+  profile", "change the project status note". Confirm the change before
+  writing.
 ---
 
 # Vault Edit
 
-Applies an in-place edit to existing vault content. This deliberately
-bypasses the `logger → review → promote` loop, so it is **gated**:
-confirm the exact change with RM before writing, and drop a `context`
-record into the log so the edit is traceable.
+Applies an in-place edit to existing vault content. Like every vault
+write it is **gated**: confirm the exact change with RM before writing.
 
 Use this for corrections and rewordings of content that already exists.
-For *new* knowledge, prefer `vault-logger` so it goes through review.
+For *new* knowledge, prefer `vault-logger` — it resolves the destination
+and any cross-module breadcrumbs for you.
 
 ---
 
@@ -80,57 +79,33 @@ Preservation rules:
 - Never delete unrelated content
 - Never reorder frontmatter fields
 - Keep heading levels and list markers consistent with the file
-- Don't touch `[ISSUE-NNN]` IDs, `date:` fields, or `[PROMOTED]` markers
-  unless the edit is specifically about them
+- Don't touch `[ISSUE-NNN]` IDs or `date:` fields unless the edit is
+  specifically about them
 
 ---
 
-## Step 5 — Record the edit in the log
-
-After a successful write, append a `context` entry to
-`_logs/PENDING_REVIEW.md` (via the `vault-logger` format) so the edit is
-traceable:
-
-```
----
-date: {today}
-agent: {agent id}
-project: {project or general}
-type: context
-status: [PROMOTED]
-summary: Edited {relative path} — {one-line description of the change}
----
-
-Direct edit applied via vault-edit. {what changed and why, briefly.}
-
----
-```
-
-Mark it `[PROMOTED]` (not `[PENDING]`) — it's a record of an already-
-applied change, not something awaiting review. If RM says "don't log
-this", skip the record.
-
----
-
-## Step 6 — Report
+## Step 5 — Report
 
 ```
 Edited {relative path}:
   {one-line summary of the change}
-  Logged a context record.
 ```
+
+If the edit substantively changes a **submodule** project file (not a
+mere typo/reword) and RM would want siblings or the parent to know,
+offer — don't auto-write — to drop an `ACTIVITY.md` breadcrumb via
+`vault-logger`. Traceability of the edit itself comes from version
+history, not a log entry.
 
 ---
 
 ## Rules
 
 - **Existing content only** — new knowledge goes through `vault-logger`
-- **Confirm before non-trivial writes** — this skill bypasses review, so
-  the gate matters
+- **Confirm before non-trivial writes** — the gate is the review
 - **Surgical edits** — smallest change that works; never full-file
   rewrites for a small fix
 - **Preserve schema** — frontmatter order, tables, headings, wikilinks,
   issue IDs all stay intact
-- **Log the edit** as a `[PROMOTED]` context record unless RM opts out
 - **Never delete a project, file, or entry here** — editing is not
   deletion; deletion is out of scope for this skill

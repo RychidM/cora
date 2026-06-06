@@ -1,5 +1,57 @@
 # Changelog
 
+## [2.0.0] — 2026-06-06
+
+**Breaking.** Aligns the plugin with AGENTS.md v2.0: the pending-review
+queue is gone, replaced by propose-then-write, and projects gain
+cross-module activity feeds. Any agent or workflow built against the
+v1.x write contract (appending to `_logs/PENDING_REVIEW.md`, the
+`status:` field, the promote step) will no longer work.
+
+### Removed
+- `vault-promoter` / `/vault-promote` — no promote step; writes land
+  directly on approval.
+- `vault-review` / `/vault-review` — inline review replaces queue review.
+- `vault-log-archive` / `/vault-archive` — no review log to archive.
+
+### Changed
+- `vault-logger` (`/vault-log`) repurposed to **propose-then-write**: it
+  resolves the destination from the entry type, shows the full draft of
+  every file it will touch, waits for explicit approval, then writes all
+  destinations in one batched pass. No `_logs/PENDING_REVIEW.md`, no
+  `status:` field.
+- `vault-logger` now owns **cross-module awareness**: project-scoped
+  `issue`/`resolution`/`progress`/`decision` writes add an entry to the
+  project's `ACTIVITY.md`; submodule writes add an implicit breadcrumb to
+  the parent and explicit breadcrumbs to siblings named in `affects:`.
+- `vault-project-init` scaffolds an empty `ACTIVITY.md` for every new
+  project/module (from the skeleton if the template lacks one).
+- `vault-lint` Check 6 swapped from "pending review backlog" to
+  **ACTIVITY.md health** (missing feeds, stale feeds, orphaned
+  breadcrumbs).
+- `vault-status` reports **recent activity** across projects instead of
+  pending-review counts.
+- `vault-edit` no longer self-logs a `[PROMOTED]` context record;
+  traceability comes from version history.
+- `vault-find` / `vault-read` search/resolve `ACTIVITY.md` and research
+  files; dropped the pending-log surface.
+
+### Migration
+- Write the final `[APPROVED]` pending entry, then archive
+  `_logs/PENDING_REVIEW.md` (done in the vault: moved to
+  `_logs/_archive/`).
+- Backfill `ACTIVITY.md` for existing projects/modules so session-start
+  reads have a target (vault-side; not shipped in the plugin).
+- Re-run `/vault-sync` on wired repos so their `CLAUDE.md` reflects the
+  v2.0 write protocol.
+
+### Documentation
+- README rewritten around propose-then-write and activity/cross-module
+  awareness; removed the log → review → promote → archive loop, status
+  semantics, and the pending-log surface from the operation matrix.
+- `docs/skills/` index and cards updated; removed the three obsolete
+  cards.
+
 ## [1.5.0] — 2026-06-06
 
 Scope-agnostic session resume — pick up any session in a fresh chat.
