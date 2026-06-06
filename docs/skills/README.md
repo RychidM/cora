@@ -54,6 +54,8 @@ The authoritative behavior for each skill lives in its
 | Skill | Command | One-liner |
 |-------|---------|-----------|
 | [vault-carry](vault-carry.md) | `/vault-carry` | Capture a chat session (summary + artifacts + references) into `sessions/` |
+| [vault-recall](vault-recall.md) | `/vault-recall` | Load recent sessions back into the current agent context |
+| [vault-resume](vault-resume.md) | `/vault-resume` | Pick up any past session in a fresh chat (no project context assumed) |
 
 ---
 

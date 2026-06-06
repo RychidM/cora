@@ -94,6 +94,8 @@ if that doesn't exist it stops and asks rather than writing to a guessed path.
 | `vault-ingest` | `/vault-ingest` | Process a research source into topic synthesis pages |
 | `vault-lint` | `/vault-lint` | Health-check the vault (orphans, stale topics, drift) |
 | `vault-carry` | `/vault-carry` | Capture a chat session (summary + artifacts + references) into `sessions/` |
+| `vault-recall` | `/vault-recall` | Load recent sessions back into the current agent context |
+| `vault-resume` | `/vault-resume` | Pick up any past session in a fresh chat (no project context assumed) |
 
 You don't have to use the slash commands — skills auto-trigger on
 matching phrases ("log this", "promote approved", "search vault for X").
@@ -114,7 +116,7 @@ Every vault surface now has create / read / update / lifecycle coverage:
 | Brand | — | `vault-find`, `vault-read` | `vault-edit` | — |
 | Repo agent files | `vault-project-sync` | — | `vault-project-sync` | — |
 | Research | `vault-ingest` | `vault-find`, `vault-read`, `vault-lint` | `vault-ingest` (re-ingest) | — |
-| Sessions | `vault-carry` | `vault-find`, `vault-read`, `vault-lint` | (manual edit) | (manual move to `_archive/`) |
+| Sessions | `vault-carry` | `vault-recall`, `vault-resume`, `vault-find`, `vault-read`, `vault-lint` | (manual edit) | (manual move to `_archive/`) |
 
 ---
 
@@ -235,6 +237,45 @@ the project. The session itself stays as the historical trace.
 
 Sessions older than 60 days get flagged by `vault-lint` for manual
 archival to `sessions/_archive/`.
+
+#### Loading sessions back into your IDE
+
+When you're working on a project and want past session context:
+
+- > "Load recent sessions for this project." → `vault-recall` lists the
+  3 most recent active sessions whose scope matches the current project
+  (auto-detected from the working directory). Summary + key points +
+  artifact filenames only — keeps agent context lean.
+- > "Recall sessions about the article series." →
+  `/vault-recall ideas/content` filters by an explicit scope prefix
+  instead of the current project.
+- > "Load that push-proxy fix session in full." →
+  `/vault-recall full push-proxy-fix-discussion` pulls one session's
+  `SESSION.md` and references; for artifacts >50KB total the skill
+  lists them with sizes and lets you pick.
+
+Recall is read-only. It never auto-promotes anything — if a loaded
+session has a decision worth logging or a reference worth ingesting,
+the skill mentions it in a one-line footer; you decide.
+
+#### Resuming a session in a fresh chat
+
+`vault-recall` assumes you're inside a project — it auto-detects the
+current project and filters sessions to that scope. When you open a
+**brand-new chat** with no project context and just want to pick up
+where you left off, use `vault-resume` instead. It makes no scope
+assumption:
+
+- > "Resume a session." / "What was I working on?" → `vault-resume`
+  lists the most recent sessions across **all** scopes, you pick one,
+  and it loads that session in full so you can continue the work.
+- > "Resume the push-proxy fix session." →
+  `/vault-resume push-proxy-fix` matches by slug or keyword and loads it
+  directly if the match is unique.
+
+Like recall, resume is read-only and never auto-promotes. The
+difference is the door: recall is project-bound, resume is
+scope-agnostic.
 
 ---
 

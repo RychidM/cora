@@ -55,6 +55,10 @@ before any files are written:
 
 ## Related
 
+[vault-recall](vault-recall.md) — the counterpart skill that loads
+sessions back into agent context for the current project.
+[vault-resume](vault-resume.md) — picks up any session in a fresh chat
+with no project context assumed.
 [vault-lint](vault-lint.md) — flags stale active sessions (>60 days)
 for manual archival.
 [vault-find](vault-find.md), [vault-read](vault-read.md) — discover and

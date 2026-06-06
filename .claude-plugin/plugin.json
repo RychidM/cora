@@ -1,7 +1,7 @@
 {
   "name": "rm-memory-vault",
   "displayName": "RM Memory Vault",
-  "version": "1.3.0",
+  "version": "1.5.0",
   "description": "Skills and slash commands for managing RM's Obsidian-based memory vault with any Claude agent. Log ideas, promote approved entries, init projects, sync agent files, and search the vault — all from chat.",
   "author": {
     "name": "RM",

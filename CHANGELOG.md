@@ -1,5 +1,94 @@
 # Changelog
 
+## [1.5.0] — 2026-06-06
+
+Scope-agnostic session resume — pick up any session in a fresh chat.
+
+`vault-recall` is project-bound: it auto-detects the current project from
+the working directory and filters sessions to that scope, which assumes
+you're already inside a project. This release adds `vault-resume` for the
+other case — opening a brand-new chat with no project context and wanting
+to continue a past session.
+
+### Skills
+- `vault-resume` — read-only. Browse mode lists the most recent sessions
+  across **all** scopes (no project auto-detection, no scope filter),
+  RM picks one, and it loads in full. Match mode (`/vault-resume <query>`)
+  resolves a session by slug or keyword. Surfaces the session's open
+  threads as a "pick up" footer so resuming continues the work rather
+  than just previewing it.
+
+### Commands
+- `/vault-resume` — browse: list recent sessions (all scopes), load on pick
+- `/vault-resume <query>` — match by slug or keyword, load if unique
+- Flags: `--limit N` (default 5, max 15), `--include-archived`
+
+### Documentation
+- README: skill table extended; Sessions row in the operation coverage
+  matrix now lists `vault-resume` under Read; new "Resuming a session in
+  a fresh chat" subsection.
+- `docs/skills/vault-resume.md` reference card; index gains the skill
+  under Sessions.
+- `docs/skills/vault-recall.md` and `docs/skills/vault-carry.md` gain
+  `vault-resume` in their Related sections.
+
+### Design notes
+- **Resume is the scope-agnostic door; recall is the project-bound door.**
+  Resume never auto-detects a project or filters by scope — that's the
+  one behavioural line that separates the two skills.
+- **Browse, then load.** Default behaviour lists and waits for a pick;
+  loading is full by default once chosen, since the intent is to continue
+  the work.
+- **Large artifact loads ask first**, mirroring `vault-recall` (>50KB
+  total prompts for selection).
+
+## [1.4.0] — 2026-06-02
+
+Session recall — the counterpart to `vault-carry`.
+
+v1.3.0 captured chat sessions into `sessions/`. This release closes the
+loop by adding `vault-recall`, which loads sessions back into agent
+context when working in an IDE or chat. The carry/recall pair is the
+complete session lifecycle: carry IN, recall OUT.
+
+### Skills
+- `vault-recall` — read-only. Lists recent sessions matching a scope
+  prefix, or loads one session fully (`SESSION.md` + references; large
+  artifacts opt-in). Auto-detects the current project from the working
+  directory in Claude Code; asks for scope when detection fails
+  (e.g. Claude desktop).
+
+### Commands
+- `/vault-recall` — list mode (current project, auto-detected)
+- `/vault-recall <scope-prefix>` — list mode with explicit scope
+- `/vault-recall full <slug>` — load one session completely
+- Flags: `--limit N`, `--include-archived`
+
+### Documentation
+- README: skill table extended; Sessions row in the operation coverage
+  matrix now lists `vault-recall` under Read.
+- `docs/skills/vault-recall.md` reference card; index gains the skill
+  under Sessions.
+- `docs/skills/vault-carry.md` and `docs/skills/vault-lint.md` gain
+  `vault-recall` in their Related sections.
+
+### Design notes
+- **List mode is the default** so the agent context stays lean.
+  Summaries only, not full file contents. Drilling into a session is an
+  explicit `full <slug>` action.
+- **Scope filtering is prefix-based.** `/vault-recall projects/agentwatch`
+  pulls sessions from any module under that project. `/vault-recall
+  projects/agentwatch/agentwatch-push-proxy` narrows to one module.
+- **Large artifact loads ask first.** If a `full` load's artifacts
+  exceed 50KB combined, the skill lists them with sizes and lets RM
+  pick which to load.
+- **Detection failures ask** instead of guessing. Claude desktop has no
+  working-directory project context — the skill asks for scope.
+- **Suggestions, not auto-promotion.** When a loaded session contains a
+  decision or a carried reference worth promoting, the skill mentions
+  it in a one-line footer but never auto-invokes `vault-logger` or
+  `vault-ingest`.
+
 ## [1.3.0] — 2026-06-02
 
 Session capture — carry chat working context into the vault.
