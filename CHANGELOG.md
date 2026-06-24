@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.1.0] — 2026-06-08
+
+### Added
+- Support for Gemini CLI: added `gemini-extension.json` and updated documentation to include Gemini CLI as a supported agent.
+
 ## [2.0.0] — 2026-06-06
 
 **Breaking.** Aligns the plugin with AGENTS.md v2.0: the pending-review

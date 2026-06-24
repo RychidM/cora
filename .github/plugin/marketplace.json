@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json.schemastore.org/copilot-marketplace.json",
+  "name": "rm-plugins",
+  "owner": {
+    "name": "RM",
+    "email": "richardsk2@gmail.com"
+  },
+  "description": "RM's plugin marketplace.",
+  "plugins": [
+    {
+      "name": "rm-memory-vault",
+      "source": "./",
+      "description": "Skills and slash commands for managing RM's Obsidian-based memory vault with any Copilot agent. Capture ideas and decisions via propose-then-write, init projects, sync agent files, and search the vault — all from chat.",
+      "version": "1.6.0",
+      "author": {
+        "name": "RM",
+        "url": "https://github.com/RychidM"
+      },
+      "homepage": "https://github.com/RychidM/rm-memory-vault-plugin#readme",
+      "repository": "https://github.com/RychidM/rm-memory-vault-plugin",
+      "license": "MIT",
+      "keywords": [
+        "obsidian",
+        "memory",
+        "vault",
+        "agent",
+        "knowledge-management"
+      ]
+    }
+  ]
+}

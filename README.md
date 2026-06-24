@@ -1,9 +1,9 @@
-# RM Memory Vault — Claude Plugin
+# RM Memory Vault — Claude, Copilot & Gemini CLI Plugin
 
-A Claude plugin that turns RM's Obsidian-based memory vault into a
+A Claude, Copilot and Gemini CLI plugin that turns RM's Obsidian-based memory vault into a
 first-class agent capability. Capture ideas and decisions, sync agent
 files to project repos, search the vault, and manage projects — all from
-chat with any Claude agent (Claude Code, Claude desktop). Writes are
+chat with any Claude agent (Claude Code, Claude desktop), Copilot, or Gemini CLI. Writes are
 proposed inline and land in their destination on your approval; there is
 no pending-review queue.
 
@@ -17,7 +17,7 @@ plugin, every operation on the vault is manual: write entries to the
 right file, propagate cross-module breadcrumbs, update indexes,
 regenerate per-repo agent context, archive old content.
 
-With this plugin installed, any Claude agent can do all of those things
+With this plugin installed, any supported agent (Claude, Copilot, Gemini) can do all of those things
 directly. Every action that touches the vault has a skill behind it, and
 each skill has a slash command for explicit invocation.
 
@@ -25,11 +25,52 @@ each skill has a slash command for explicit invocation.
 
 ## Installation
 
-### From the Claude marketplace (when published)
+Each CLI loads plugins a different way — the same `skills/` power all of them, but the
+manifest each tool reads differs. Pick your tool below.
+
+### Claude (Code & desktop)
+
+Reads `.claude-plugin/marketplace.json` + `.claude-plugin/plugin.json`.
 
 ```
-/plugin install rm-memory-vault
+/plugin marketplace add RychidM/rm-memory-vault-plugin
+/plugin install rm-memory-vault@rm-plugins
 ```
+
+### GitHub Copilot CLI
+
+Reads `.github/plugin/marketplace.json` + the root `plugin.json` (skills are
+discovered from `skills/`).
+
+```
+/plugin marketplace add RychidM/rm-memory-vault-plugin
+/plugin install rm-memory-vault@rm-plugins
+```
+
+### Gemini CLI
+
+Reads `gemini-extension.json` + the TOML slash commands in `commands/`.
+
+```bash
+gemini extensions install https://github.com/RychidM/rm-memory-vault-plugin
+# or, from a local clone:
+gemini extensions install .
+```
+
+### OpenAI Codex
+
+Reads `.agents/plugins/marketplace.json` + the plugin manifest at
+`plugins/rm-memory-vault/.codex-plugin/plugin.json`.
+
+```bash
+codex plugin marketplace add RychidM/rm-memory-vault-plugin
+codex plugin add rm-memory-vault@rm-plugins
+```
+
+For context, run `/vault-sync` (or the `vault-project-sync` skill) in a repo
+to generate its local `AGENTS.md`. `AGENTS.md`, `CLAUDE.md`, and `GEMINI.md`
+are git-ignored — they hold personal vault memory and are generated per-repo,
+never committed.
 
 ### From this repository (local dev)
 
@@ -37,13 +78,17 @@ each skill has a slash command for explicit invocation.
 git clone https://github.com/RychidM/rm-memory-vault-plugin.git
 cd rm-memory-vault-plugin
 
-# Claude Code
+# Claude
 ln -s "$(pwd)" ~/.claude/plugins/rm-memory-vault
-
-# Claude desktop
-# (Drop the folder into the Claude desktop plugins directory or use
-# Settings → Plugins → Install from folder)
+# Copilot / Codex / Gemini: use the marketplace/link commands above with a
+# local path instead of the GitHub repo (e.g. `gemini extensions link .`,
+# `codex plugin marketplace add .`).
 ```
+
+> **Editing skills?** The repo-root `skills/` is canonical. Codex installs by
+> copying its plugin subdir, so it needs an in-tree copy at
+> `plugins/rm-memory-vault/skills/`. After changing `skills/`, run
+> `./scripts/sync-codex-skills.sh` before committing to keep the copy in sync.
 
 ---
 
@@ -63,8 +108,8 @@ export AGENT_MEMORY_VAULT="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Doc
 
 **The env var must be visible to the agent's process, not just your
 terminal.** A skill reads it by running `echo "$AGENT_MEMORY_VAULT"`, so the
-variable has to be exported in the environment that launched Claude — put the
-`export` in your shell profile (`~/.zshrc`) and start Claude Code from that
+variable has to be exported in the environment that launched Claude or Gemini — put the
+`export` in your shell profile (`~/.zshrc`) and start Claude Code or Gemini CLI from that
 shell. Setting it in an unrelated terminal after Claude is already running has
 no effect.
 
@@ -127,7 +172,7 @@ Every vault surface now has create / read / update / lifecycle coverage:
 There is no pending-review queue. An entry goes straight to its
 destination once you approve it — **inline review is the review.**
 
-1. **During work**, in Claude Code or Claude desktop, say:
+1. **During work**, in Claude Code, Claude desktop, or Gemini CLI, say:
    > "Log this decision to my vault."
 
    The `vault-logger` skill resolves the destination from the entry type

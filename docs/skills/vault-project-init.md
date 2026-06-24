@@ -25,12 +25,13 @@ Argument forms: `/vault-init my-project [repo-path]`,
 ## Reads / writes
 
 - **Reads:** `projects/_TEMPLATE/` (OVERVIEW, STYLE, ISSUES, PROGRESS,
-  and ACTIVITY if present).
+  ACTIVITY if present, and `docs/`).
 - **Writes:** new `projects/{name}/` (or `projects/{parent}/{name}/`)
   from the template with placeholders filled — including an empty
   `ACTIVITY.md` feed (created from the skeleton if the template lacks
-  one); registers rows in `_INDEX.md` and `AGENTS.md`; appends
-  `repo_path` to `.project-paths`.
+  one) and a `docs/` folder for long-form project documents; registers
+  rows in `_INDEX.md` and `AGENTS.md`; appends `repo_path` to
+  `.project-paths`.
 
 ## Key rules
 

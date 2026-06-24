@@ -1,0 +1,18 @@
+description = "Health-check the vault for contradictions, orphans, stale topics, and drift."
+prompt = """
+You are operating on RM's Obsidian memory vault. Read GEMINI.md (this extension's context file) for the vault location and path-resolution rules before acting.
+
+Follow this procedure. If `skills/vault-lint/SKILL.md` exists in this extension directory, read it for the full algorithm and follow it precisely; otherwise use the summary below.
+
+Use the `vault-lint` skill to scan the vault and produce a diagnostic
+report. Read-only — never writes to any file.
+
+No arguments. Optionally takes a focus area:
+- `/vault-lint orphans` — only orphan-page check
+- `/vault-lint stale` — only stale-topic check
+- `/vault-lint drift` — only AGENTS.md table check
+
+If no focus given, run all checks.
+
+User request / arguments: {{args}}
+"""
