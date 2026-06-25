@@ -2,8 +2,34 @@
 
 ## [2.1.0] — 2026-06-08
 
+Also aligns the `ACTIVITY.md` model with the companion vault template
+(`agent-memory-vault-template`): it's scaffolded for every top-level
+project at creation time, not lazily per write, and modules never get
+their own — their activity always rolls up into the parent's feed.
+
 ### Added
 - Support for Gemini CLI: added `gemini-extension.json` and updated documentation to include Gemini CLI as a supported agent.
+
+### Changed
+- `vault-project-init` no longer eagerly creates `ACTIVITY.md` for every
+  project/module. Top-level projects keep the copy that now ships in
+  `_TEMPLATE/`; modules have it deleted. It also writes the `parent:` /
+  `submodules:` frontmatter declaration on both sides of a new module —
+  the authoritative source (per `AGENTS.md`) for resolving relationships
+  at session start, not folder nesting.
+- `vault-move` keeps `parent:`/`submodules:` frontmatter in sync on both
+  sides when relocating, promoting, or demoting a project/module, and
+  creates/deletes `ACTIVITY.md` accordingly on promotion/demotion.
+- `vault-lint` Check 6 (`ACTIVITY.md health`) now also flags modules that
+  wrongly have their own feed, and Check 7 (`Active Projects table
+  drift`) flags one-sided `parent:`/`submodules:` declarations.
+- `vault-status` / `vault-project-init` docs corrected: previously implied
+  every project gets an `ACTIVITY.md`; now scoped to top-level only.
+
+### Fixed
+- Removed the false assumption (in `vault-status`, `vault-lint`, and
+  `vault-project-init`) that every project and module has its own
+  `ACTIVITY.md`.
 
 ## [2.0.0] — 2026-06-06
 

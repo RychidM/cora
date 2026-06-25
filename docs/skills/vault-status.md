@@ -19,8 +19,9 @@ None.
 
 ## Reads / writes
 
-- **Reads:** `projects/_INDEX.md`, each project's `ACTIVITY.md`,
-  `ISSUES.md` and `PROGRESS.md`, `ideas/*.md`.
+- **Reads:** `projects/_INDEX.md`, each top-level project's
+  `ACTIVITY.md` (modules don't have one), `ISSUES.md` and `PROGRESS.md`,
+  `ideas/*.md`.
 - **Writes:** nothing.
 
 ## Output

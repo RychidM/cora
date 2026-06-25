@@ -41,11 +41,13 @@ None required. Optional focus argument scopes the report to one check:
    in topic pages.
 5. **Issues missing prevention** — resolved issues whose Prevention
    section is empty.
-6. **ACTIVITY.md health** — active projects/modules missing an
-   `ACTIVITY.md`, feeds gone stale while the project moves on, or
-   breadcrumbs whose link targets don't resolve.
+6. **ACTIVITY.md health** — top-level projects missing the
+   `ACTIVITY.md` every project should be scaffolded with, modules that
+   wrongly have their own, feeds gone stale while the project moves on,
+   or breadcrumbs whose link targets don't resolve.
 7. **Active Projects table drift** — `AGENTS.md` vs. `projects/` folders
-   out of sync.
+   out of sync, plus one-sided `parent:`/`submodules:` frontmatter
+   declarations between a module and its parent.
 8. **Broken wikilinks** — `[[...]]` pointing at files that don't exist.
 9. **Stale active sessions** — sessions in `sessions/` with `status: active`
    and a `date:` more than 60 days old; flagged for manual archival.

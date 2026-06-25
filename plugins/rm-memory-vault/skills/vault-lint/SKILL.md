@@ -76,13 +76,21 @@ These are issues that were fixed but where the lesson wasn't captured.
 
 ### Check 6 — ACTIVITY.md health
 
-Every active project (and module) should have an `ACTIVITY.md` feed.
+Every **top-level** project should have an `ACTIVITY.md` feed (it's
+scaffolded from the template at creation, even before the project has
+any modules). **Modules should never have their own** — their activity
+rolls up into the parent's feed instead.
+
 Scan `projects/` (excluding `_TEMPLATE/` and `_archive/`) and flag:
-- **Missing feed** — a project/module folder with `OVERVIEW.md` but no
-  `ACTIVITY.md`. Session-start reads will have nothing to surface.
+- **Missing feed** — a top-level project folder with `OVERVIEW.md` but
+  no `ACTIVITY.md`. Likely predates the template gaining this file, or
+  was created without going through `vault-project-init`.
+- **Misplaced feed** — a module (a project folder nested under another
+  project folder) that has its own `ACTIVITY.md`. It shouldn't — flag
+  for removal.
 - **Stale feed** — `ACTIVITY.md` whose newest entry (or `last_updated`
-  frontmatter) is >60 days old while the project's `PROGRESS.md` shows
-  more recent work → activity isn't being recorded.
+  frontmatter) is >60 days old while the project (or any of its modules)
+  has more recent `PROGRESS.md` work → activity isn't being recorded.
 - **Orphaned breadcrumb** — a `[from {sibling}]` or `[{submodule}]`
   breadcrumb whose `→ [[...]]` target file doesn't resolve (the source
   entry was moved or never written).
@@ -95,6 +103,12 @@ folders in `projects/`. Flag:
 - Folders in `projects/` not listed in `AGENTS.md`
 - Statuses in `AGENTS.md` that don't match the project's
   `PROGRESS.md` frontmatter
+- **Parent/submodule frontmatter drift** — for each module (a project
+  folder nested under another project folder), check its `OVERVIEW.md`
+  `parent:` field names the actual parent, and that the parent's
+  `OVERVIEW.md` `submodules:` list includes the module back. Flag any
+  one-sided declaration (module claims a parent that doesn't list it,
+  or a parent lists a submodule whose own `parent:` doesn't match).
 
 ### Check 8 — Broken `[[wikilinks]]`
 
@@ -156,11 +170,14 @@ Scanned {N} files in {duration}.
 
 ## 📒 ACTIVITY.md Health ({count})
 
-- `projects/agentwatch/agentwatch-relay/` has `OVERVIEW.md` but no
-  `ACTIVITY.md`
-  *Suggested action: create the feed (next `vault-logger` write will, or scaffold now)*
-- `projects/agentwatch/ACTIVITY.md` newest entry 2026-03-15; project
-  `PROGRESS.md` has updates through 2026-06-02
+- `projects/some-standalone-project/` (top-level) has `OVERVIEW.md` but
+  no `ACTIVITY.md`
+  *Suggested action: scaffold it from the template (predates ACTIVITY.md being added, or wasn't created via vault-project-init)*
+- `projects/agentwatch/agentwatch-relay/ACTIVITY.md` exists, but
+  `agentwatch-relay` is a module
+  *Suggested action: remove it — its activity belongs in the parent's `projects/agentwatch/ACTIVITY.md`*
+- `projects/agentwatch/ACTIVITY.md` newest entry 2026-03-15; module
+  `agentwatch-relay/PROGRESS.md` has updates through 2026-06-02
   *Suggested action: activity isn't being logged — confirm writes go through vault-logger*
 
 ## 📄 Stale Active Sessions ({count})
@@ -173,6 +190,9 @@ Scanned {N} files in {duration}.
 - `agentwatch-protocol` in AGENTS.md but no folder
   in `projects/agentwatch/`
   *Suggested action: create the folder, or remove from table*
+- `agentwatch-relay/OVERVIEW.md` has `parent: agentwatch`, but
+  `agentwatch/OVERVIEW.md` `submodules:` doesn't list `agentwatch-relay`
+  *Suggested action: add it to the parent's submodules list*
 
 ## 🔗 Broken Wikilinks ({count})
 

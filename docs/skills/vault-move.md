@@ -25,7 +25,10 @@ module top-level", "relocate the X project".
 - **Reads:** the source folder, `_INDEX.md`, `AGENTS.md`,
   `.project-paths`, and all `*.md` for `[[wikilinks]]`.
 - **Writes:** moves the folder, then repoints `_INDEX.md`, `AGENTS.md`,
-  the moved/parent OVERVIEWs, every `[[wikilink]]`, and `.project-paths`.
+  the moved/parent OVERVIEWs (including `parent:`/`submodules:`
+  frontmatter on both sides), every `[[wikilink]]`, and `.project-paths`.
+  Creates/deletes `ACTIVITY.md` when a project is promoted to or demoted
+  from top-level.
 
 ## Key rules
 
@@ -34,6 +37,7 @@ module top-level", "relocate the X project".
 - Moves, never copy-and-delete; never destroys content.
 - Fixes **every** reference — a move that leaves dangling links is a
   failed move.
+- Keeps `parent:`/`submodules:` frontmatter in sync on both sides.
 - Confirms resolved source/destination + the wikilink rewrite list first.
 - Flags synced repo files as stale.
 

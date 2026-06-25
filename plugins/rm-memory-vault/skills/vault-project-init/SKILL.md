@@ -39,8 +39,7 @@ Resolve vault root (see `vault-logger` Step 1).
 
 Template directory: `{vault_root}/projects/_TEMPLATE/`
 Required files in the template: `OVERVIEW.md`, `STYLE.md`, `ISSUES.md`,
-`PROGRESS.md`. `ACTIVITY.md` may also be present; if it isn't, Step 3
-creates one from the skeleton. The template also has a `docs/` folder
+`PROGRESS.md`, `ACTIVITY.md`. The template also has a `docs/` folder
 (with a placeholder `docs/README.md`) for long-form project documents —
 copy it along with the rest of the template.
 
@@ -62,41 +61,40 @@ replace placeholders:
 - `Project Name` → `{name in title case, dashes → spaces}`
 - `YYYY-MM-DD` → today's date
 
-If this is a module, prepend to `OVERVIEW.md` after the first heading:
+If this is a module:
 
-```
----
+1. Prepend to `OVERVIEW.md` after the first heading:
 
-## System Context
+   ```
+   ---
 
-This is a module of **{parent}**.
-→ See [[../OVERVIEW]] for the full system architecture and cross-module
-decisions.
-```
+   ## System Context
 
-### Create the ACTIVITY.md feed
+   This is a module of **{parent}**.
+   → See [[../OVERVIEW]] for the full system architecture and cross-module
+   decisions.
+   ```
 
-Every project and module gets an `ACTIVITY.md` so session-start reads and
-cross-module breadcrumbs have a target. If the template already supplied
-one, use it (with placeholders replaced as above). Otherwise create
-`{target_path}/ACTIVITY.md` from this skeleton:
+2. **Delete `{target_path}/ACTIVITY.md`.** Modules never get their own —
+   their activity rolls up into the parent's feed via `vault-logger`
+   breadcrumbs.
 
-```markdown
----
-type: activity
-project: {name}
-last_updated: {today}
----
+3. **Declare the relationship in frontmatter** — this, not folder
+   nesting, is what `AGENTS.md` treats as authoritative when resolving
+   which `ACTIVITY.md` to read at session start:
+   - In the module's `OVERVIEW.md`, set `parent:` (currently empty) to
+     `{parent}`.
+   - In the **parent's** `OVERVIEW.md`, add `{name}` to `submodules:`
+     (e.g. `submodules: []` → `submodules: [{name}]`; if it already has
+     entries, append `{name}` rather than replacing the list). Skip if
+     `{name}` is already listed.
 
-# {Project Name} — Activity Feed
+### Top-level projects keep ACTIVITY.md
 
-> Chronological feed of work touching this project, including cross-module
-> breadcrumbs from siblings. Most recent at top.
-
----
-```
-
-Leave it with no entries — the first `vault-logger` write populates it.
+Top-level projects keep the `ACTIVITY.md` copied from the template
+as-is (placeholders replaced as above) — leave it with no entries. It
+stays empty until the project gets its first module and a `vault-logger`
+write needs to drop a breadcrumb into it.
 
 ---
 
@@ -129,9 +127,23 @@ If `repo_path` is given:
 
 ## Step 6 — Report
 
+Top-level:
 ```
 Initialised project: {name}
   Vault folder: {target_path} (incl. empty ACTIVITY.md, docs/)
+  Registered in: _INDEX.md, AGENTS.md
+
+Next:
+  Fill in {target_path}/OVERVIEW.md
+  Drop long-form docs in {target_path}/docs/
+  Run /vault-sync if you haven't already
+```
+
+Module:
+```
+Initialised module: {parent}/{name}
+  Vault folder: {target_path} (docs/, no ACTIVITY.md)
+  Declared: parent: {parent} in {name}/OVERVIEW.md; {name} added to {parent}/OVERVIEW.md submodules
   Registered in: _INDEX.md, AGENTS.md
 
 Next:
@@ -150,3 +162,6 @@ Next:
   placeholders alone for RM to complete
 - **Module nesting is one level deep** — `projects/{parent}/{module}/`,
   not deeper
+- **Declare parent/submodule relationships in frontmatter, not just
+  folder location** — set both sides (`parent:` on the module,
+  `submodules:` on the parent) every time a module is created

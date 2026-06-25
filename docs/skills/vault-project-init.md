@@ -25,22 +25,25 @@ Argument forms: `/vault-init my-project [repo-path]`,
 ## Reads / writes
 
 - **Reads:** `projects/_TEMPLATE/` (OVERVIEW, STYLE, ISSUES, PROGRESS,
-  ACTIVITY if present, and `docs/`).
+  ACTIVITY, and `docs/`).
 - **Writes:** new `projects/{name}/` (or `projects/{parent}/{name}/`)
-  from the template with placeholders filled — including an empty
-  `ACTIVITY.md` feed (created from the skeleton if the template lacks
-  one) and a `docs/` folder for long-form project documents; registers
-  rows in `_INDEX.md` and `AGENTS.md`; appends `repo_path` to
-  `.project-paths`.
+  from the template with placeholders filled, and a `docs/` folder for
+  long-form project documents; registers rows in `_INDEX.md` and
+  `AGENTS.md`; appends `repo_path` to `.project-paths`. Top-level
+  projects keep the template's empty `ACTIVITY.md`; modules have it
+  deleted (their activity rolls up into the parent's feed instead).
+  For modules, also sets `parent:` in the module's `OVERVIEW.md` and
+  appends to `submodules:` in the parent's `OVERVIEW.md`.
 
 ## Key rules
 
 - Never overwrites an existing project folder.
 - Never invents placeholder content — leaves `*(Fill in)*` for RM.
-- Always creates an `ACTIVITY.md` so session-start reads and breadcrumbs
-  have a target; leaves it empty for the first `vault-logger` write.
+- Top-level projects get `ACTIVITY.md` (empty until a module exists);
+  modules never get their own.
 - Module nesting is one level deep.
-- Modules get a "System Context" block linking the parent OVERVIEW.
+- Modules get a "System Context" block linking the parent OVERVIEW, plus
+  `parent:`/`submodules:` frontmatter on both sides of the relationship.
 
 ## Related
 

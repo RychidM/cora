@@ -73,11 +73,27 @@ uniquely-anchored edits.
    re-nest the row (`&nbsp;&nbsp;↳ {name}` under the parent, or flatten).
 2. **`AGENTS.md`** — same update in the Active Projects table.
 3. **The moved `OVERVIEW.md`** — if it's now a module, ensure the
-   "System Context" block points at the correct parent `[[../OVERVIEW]]`;
-   if it's no longer a module, remove that block. On rename, update any
-   self-referential title/`project:` frontmatter.
-4. **Parent `OVERVIEW.md`(s)** — fix references to the module in the old
-   parent and add to the new parent if cross-module decisions mention it.
+   "System Context" block points at the correct parent `[[../OVERVIEW]]`,
+   and set its `parent:` frontmatter to the new parent's name; if it's no
+   longer a module (promoted to top-level), remove that block and clear
+   `parent:` back to empty. On rename, update any self-referential
+   title/`project:` frontmatter.
+4. **Parent `OVERVIEW.md`(s) — `submodules:` frontmatter and ACTIVITY.md**:
+   - If the source had a parent, remove the module's (old) name from the
+     old parent's `submodules:` list.
+   - If the destination has a parent, add the module's (new) name to the
+     new parent's `submodules:` list (every top-level project already
+     has an `ACTIVITY.md` from the template, so there's no feed to
+     create here — just the list entry).
+   - If a top-level project is **demoted** to a module, delete its own
+     `ACTIVITY.md` (it no longer rolls up anything itself).
+   - If a module is **promoted** to top-level, it has no `ACTIVITY.md`
+     (modules never do) — create one from the skeleton (see
+     `vault-logger`'s ACTIVITY.md skeleton) so it's ready once it gains
+     modules of its own.
+   - Also fix any prose references to the module in the old parent's
+     `OVERVIEW.md`, and add to the new parent's if cross-module decisions
+     mention it.
 5. **`[[wikilinks]]` across the vault** — search all `*.md` for links to
    the old path or name (`[[{old}/OVERVIEW]]`, `[[{old}]]`, etc.) and
    repoint them to the new path/name. Use `vault-find` semantics to catch
@@ -100,7 +116,7 @@ the affected repo(s).
 
 ```
 Moved {old path} → {new path}
-  Updated: _INDEX.md, AGENTS.md, OVERVIEW.md, {N} wikilinks, .project-paths
+  Updated: _INDEX.md, AGENTS.md, OVERVIEW.md (incl. parent:/submodules: frontmatter), {N} wikilinks, .project-paths
   Re-run /vault-sync for: {repo(s)} — agent files are now stale
 ```
 
@@ -117,6 +133,9 @@ dangling links silently.
 - **Fix every reference** — index rows, AGENTS.md, parent OVERVIEWs,
   wikilinks, `.project-paths`; a move that leaves dangling links is a
   failed move
+- **Keep `parent:`/`submodules:` frontmatter in sync on both sides** —
+  a move that updates the folder but not these fields will get flagged
+  by `vault-lint`'s Check 7
 - **Confirm before moving** — show resolved source/destination paths and
   the wikilink rewrite list first
 - **Flag stale synced files** — synced repos need a re-sync after a move

@@ -29,7 +29,7 @@ Read these files and extract the relevant data:
 | File | What to extract |
 |------|-----------------|
 | `projects/_INDEX.md` | Project list with statuses |
-| `projects/{p}/ACTIVITY.md` (for each project) | Most recent few entries (date + type + summary) |
+| `projects/{p}/ACTIVITY.md` (for each top-level project; modules don't have one) | Most recent few entries (date + type + summary) |
 | `projects/{p}/ISSUES.md` (for each project) | Count entries under "Open Issues" |
 | `projects/{p}/PROGRESS.md` (for each project) | `current_phase` from frontmatter |
 
@@ -52,7 +52,7 @@ Produce a single concise markdown report:
 
 ## Recent Activity
 
-Most recent entries across all projects' `ACTIVITY.md` feeds, newest first:
+Most recent entries across a top-level project's `ACTIVITY.md`, newest first:
 
 - {date} `{project}` [{type}] {summary}
 - ...
