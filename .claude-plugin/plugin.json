@@ -25,6 +25,6 @@
   },
   "config": {
     "vault_path_env": "AGENT_MEMORY_VAULT",
-    "vault_path_fallback": "~/obsidian-memory-vault"
+    "vault_path_fallback": "$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/rm-memory-vault"
   }
 }

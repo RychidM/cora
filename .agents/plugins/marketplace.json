@@ -1,0 +1,19 @@
+{
+  "name": "rm-plugins",
+  "interface": {
+    "displayName": "RM Plugins"
+  },
+  "plugins": [
+    {
+      "name": "rm-memory-vault",
+      "source": {
+        "source": "local",
+        "path": "./plugins/rm-memory-vault"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
