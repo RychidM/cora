@@ -3,7 +3,7 @@
 ## [2.1.0] — 2026-06-08
 
 Also aligns the `ACTIVITY.md` model with the companion vault template
-(`agent-memory-vault-template`): it's scaffolded for every top-level
+(`cora-vault`): it's scaffolded for every top-level
 project at creation time, not lazily per write, and modules never get
 their own — their activity always rolls up into the parent's feed.
 

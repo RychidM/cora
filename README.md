@@ -424,7 +424,7 @@ sessions/
 ```
 
 If you don't have this structure yet, the
-[agent-memory-vault-template](https://github.com/RychidM/agent-memory-vault-template)
+[cora-vault](https://github.com/RychidM/cora-vault)
 starter sets it up. Its `scripts/` (`init-project.sh`, `sync-memory.sh`,
 `memory-wrappers.sh`) cover the same operations from a plain shell, no
 agent required — this plugin's skills are the agent-driven equivalent,
