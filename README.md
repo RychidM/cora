@@ -1,6 +1,6 @@
-# RM Memory Vault — Claude, Copilot & Gemini CLI Plugin
+# CORA — Continuity Of Recorded Activity
 
-A Claude, Copilot and Gemini CLI plugin that turns RM's Obsidian-based memory vault into a
+A Claude, Copilot and Gemini CLI plugin that turns your Obsidian-based memory vault into a
 first-class agent capability. Capture ideas and decisions, sync agent
 files to project repos, search the vault, and manage projects — all from
 chat with any Claude agent (Claude Code, Claude desktop), Copilot, or Gemini CLI. Writes are
@@ -11,7 +11,7 @@ no pending-review queue.
 
 ## What this plugin does
 
-The vault is a structured Obsidian repository that holds RM's projects,
+The vault is a structured Obsidian repository that holds your projects,
 ideas, identity, research, and per-project activity feeds. Without this
 plugin, every operation on the vault is manual: write entries to the
 right file, propagate cross-module breadcrumbs, update indexes,
@@ -23,7 +23,7 @@ each skill has a slash command for explicit invocation.
 
 ---
 
-## Features at a glance
+## Features
 
 | | |
 |---|---|
@@ -31,7 +31,7 @@ each skill has a slash command for explicit invocation.
 | **Project lifecycle skills** | Scaffold, rename, relocate, promote/demote, and archive projects and modules — every reference (`_INDEX.md`, `AGENTS.md`, wikilinks) is kept consistent for you. |
 | **Research ingestion** | Turns a clipped article, doc, or analysis into an LLM-maintained topic page, cross-linked to the projects it's relevant to. |
 | **Session capture & resume** | Carries a chat's working context into the vault, then recalls or resumes it later — in the same project or a brand-new chat. |
-| **Vault health checks** | `vault-lint` surfaces orphan pages, stale topics, broken wikilinks, and structural drift in a single report. |
+| **Vault health checks** | `cora-lint` surfaces orphan pages, stale topics, broken wikilinks, and structural drift in a single report. |
 | **Per-repo agent context sync** | Generates `CLAUDE.md`/`GEMINI.md`/`.github/copilot-instructions.md`/Codex `AGENTS.md` for any project repo from the vault's own content. |
 | **Works across agents** | Claude Code, Claude Desktop, GitHub Copilot CLI, Gemini CLI, and OpenAI Codex all read the same `skills/`. |
 | **Propose-then-write capture** | Drafts the exact edit for any idea, decision, issue, progress update, or context note, waits for your approval, then writes it. No pending-review queue. |
@@ -49,7 +49,7 @@ Reads `.claude-plugin/marketplace.json` + `.claude-plugin/plugin.json`.
 
 ```
 /plugin marketplace add RychidM/rm-memory-vault-plugin
-/plugin install rm-memory-vault@rm-plugins
+/plugin install cora@rm-plugins
 ```
 
 ### Claude Desktop
@@ -63,7 +63,7 @@ are Claude Code CLI-only) — it has its own GUI flow that reads the same
 3. In that dialog, select **Personal**, then click the **+** icon again.
 4. Choose **Add from a repository** and enter `RychidM/rm-memory-vault-plugin`
    (or the full GitHub URL).
-5. Select `rm-memory-vault` from the marketplace and install.
+5. Select `cora` from the marketplace and install.
 
 Manage or reconfigure installed plugins later from the **Customize** menu.
 
@@ -78,7 +78,7 @@ discovered from `skills/`).
 
 ```
 /plugin marketplace add RychidM/rm-memory-vault-plugin
-/plugin install rm-memory-vault@rm-plugins
+/plugin install cora@rm-plugins
 ```
 
 ### Gemini CLI
@@ -94,14 +94,14 @@ gemini extensions install .
 ### OpenAI Codex
 
 Reads `.agents/plugins/marketplace.json` + the plugin manifest at
-`plugins/rm-memory-vault/.codex-plugin/plugin.json`.
+`plugins/cora/.codex-plugin/plugin.json`.
 
 ```bash
 codex plugin marketplace add RychidM/rm-memory-vault-plugin
-codex plugin add rm-memory-vault@rm-plugins
+codex plugin add cora@rm-plugins
 ```
 
-For context, run `/vault-sync` (or the `vault-project-sync` skill) in a repo
+For context, run `/cora-sync` (or the `cora-project-sync` skill) in a repo
 to generate its local `AGENTS.md`. `AGENTS.md`, `CLAUDE.md`, and `GEMINI.md`
 are git-ignored — they hold personal vault memory and are generated per-repo,
 never committed.
@@ -113,7 +113,7 @@ git clone https://github.com/RychidM/rm-memory-vault-plugin.git
 cd rm-memory-vault-plugin
 
 # Claude
-ln -s "$(pwd)" ~/.claude/plugins/rm-memory-vault
+ln -s "$(pwd)" ~/.claude/plugins/cora
 # Copilot / Codex / Gemini: use the marketplace/link commands above with a
 # local path instead of the GitHub repo (e.g. `gemini extensions link .`,
 # `codex plugin marketplace add .`).
@@ -121,7 +121,7 @@ ln -s "$(pwd)" ~/.claude/plugins/rm-memory-vault
 
 > **Editing skills?** The repo-root `skills/` is canonical. Codex installs by
 > copying its plugin subdir, so it needs an in-tree copy at
-> `plugins/rm-memory-vault/skills/`. After changing `skills/`, run
+> `plugins/cora/skills/`. After changing `skills/`, run
 > `./scripts/sync-codex-skills.sh` before committing to keep the copy in sync.
 
 ---
@@ -161,21 +161,21 @@ if that doesn't exist it stops and asks rather than writing to a guessed path.
 
 | Skill | Command | What it does |
 |-------|---------|--------------|
-| `vault-logger` | `/vault-log` | Propose an entry inline, then write it to its destination on approval (+ cross-module breadcrumbs) |
-| `vault-status` | `/vault-status` | Show projects, open issues, recent activity |
-| `vault-project-init` | `/vault-init` | Create a new project or module from the template |
-| `vault-project-sync` | `/vault-sync` | Write fresh `CLAUDE.md`/`GEMINI.md`/etc. to a repo |
-| `vault-find` | `/vault-find` | Search across projects, ideas, brand, research |
-| `vault-read` | `/vault-read` | Return the full content of a file or entry |
-| `vault-edit` | `/vault-edit` | Make a direct in-place edit to existing content |
-| `vault-idea-status` | `/vault-idea` | Advance an idea's lifecycle status |
-| `vault-project-status` | `/vault-project-status` | Set project status or archive a project |
-| `vault-move` | `/vault-move` | Rename a project or relocate a module, fixing all references |
-| `vault-ingest` | `/vault-ingest` | Process a research source into topic synthesis pages |
-| `vault-lint` | `/vault-lint` | Health-check the vault (orphans, stale topics, drift) |
-| `vault-carry` | `/vault-carry` | Capture a chat session (summary + artifacts + references) into `sessions/` |
-| `vault-recall` | `/vault-recall` | Load recent sessions back into the current agent context |
-| `vault-resume` | `/vault-resume` | Pick up any past session in a fresh chat (no project context assumed) |
+| `cora-logger` | `/cora-log` | Propose an entry inline, then write it to its destination on approval (+ cross-module breadcrumbs) |
+| `cora-status` | `/cora-status` | Show projects, open issues, recent activity |
+| `cora-project-init` | `/cora-init` | Create a new project or module from the template |
+| `cora-project-sync` | `/cora-sync` | Write fresh `CLAUDE.md`/`GEMINI.md`/etc. to a repo |
+| `cora-find` | `/cora-find` | Search across projects, ideas, brand, research |
+| `cora-read` | `/cora-read` | Return the full content of a file or entry |
+| `cora-edit` | `/cora-edit` | Make a direct in-place edit to existing content |
+| `cora-idea-status` | `/cora-idea` | Advance an idea's lifecycle status |
+| `cora-project-status` | `/cora-project-status` | Set project status or archive a project |
+| `cora-move` | `/cora-move` | Rename a project or relocate a module, fixing all references |
+| `cora-ingest` | `/cora-ingest` | Process a research source into topic synthesis pages |
+| `cora-lint` | `/cora-lint` | Health-check the vault (orphans, stale topics, drift) |
+| `cora-carry` | `/cora-carry` | Capture a chat session (summary + artifacts + references) into `sessions/` |
+| `cora-recall` | `/cora-recall` | Load recent sessions back into the current agent context |
+| `cora-resume` | `/cora-resume` | Pick up any past session in a fresh chat (no project context assumed) |
 
 You don't have to use the slash commands — skills auto-trigger on
 matching phrases ("log this", "what's been happening", "search vault for X").
@@ -189,14 +189,14 @@ Every vault surface now has create / read / update / lifecycle coverage:
 
 | Surface | Create | Read | Update | Lifecycle / remove |
 |---------|--------|------|--------|--------------------|
-| Projects | `vault-project-init` | `vault-status`, `vault-read` | `vault-logger`, `vault-edit`, `vault-move` (rename/relocate) | `vault-project-status` (incl. archive) |
-| Activity feeds | `vault-project-init` (top-level projects only; `vault-logger` as fallback if missing) | `vault-status`, `vault-read`, `vault-find` | `vault-logger` (breadcrumbs) | (manual trim) |
-| Ideas | `vault-logger` | `vault-find`, `vault-read` | `vault-edit` | `vault-idea-status` |
-| Issues | `vault-logger` | `vault-find`, `vault-read` | `vault-logger` (resolve), `vault-edit` | — |
-| Brand | — | `vault-find`, `vault-read` | `vault-edit` | — |
-| Repo agent files | `vault-project-sync` | — | `vault-project-sync` | — |
-| Research | `vault-ingest` | `vault-find`, `vault-read`, `vault-lint` | `vault-ingest` (re-ingest) | — |
-| Sessions | `vault-carry` | `vault-recall`, `vault-resume`, `vault-find`, `vault-read`, `vault-lint` | (manual edit) | (manual move to `_archive/`) |
+| Projects | `cora-project-init` | `cora-status`, `cora-read` | `cora-logger`, `cora-edit`, `cora-move` (rename/relocate) | `cora-project-status` (incl. archive) |
+| Activity feeds | `cora-project-init` (top-level projects only; `cora-logger` as fallback if missing) | `cora-status`, `cora-read`, `cora-find` | `cora-logger` (breadcrumbs) | (manual trim) |
+| Ideas | `cora-logger` | `cora-find`, `cora-read` | `cora-edit` | `cora-idea-status` |
+| Issues | `cora-logger` | `cora-find`, `cora-read` | `cora-logger` (resolve), `cora-edit` | — |
+| Brand | — | `cora-find`, `cora-read` | `cora-edit` | — |
+| Repo agent files | `cora-project-sync` | — | `cora-project-sync` | — |
+| Research | `cora-ingest` | `cora-find`, `cora-read`, `cora-lint` | `cora-ingest` (re-ingest) | — |
+| Sessions | `cora-carry` | `cora-recall`, `cora-resume`, `cora-find`, `cora-read`, `cora-lint` | (manual edit) | (manual move to `_archive/`) |
 
 ---
 
@@ -210,7 +210,7 @@ destination once you approve it — **inline review is the review.**
 1. **During work**, in Claude Code, Claude desktop, or Gemini CLI, say:
    > "Log this decision to my vault."
 
-   The `vault-logger` skill resolves the destination from the entry type
+   The `cora-logger` skill resolves the destination from the entry type
    (issues → `ISSUES.md`, decisions → `OVERVIEW.md`, ideas →
    `ideas/{domain}.md`, etc.), works out any cross-module breadcrumbs,
    and shows you the **full draft of every file it will touch**.
@@ -228,11 +228,11 @@ below.
 
 ### Looking things up
 
-- > "What did I note about pairing flow?" → `vault-find` returns ranked
+- > "What did I note about pairing flow?" → `cora-find` returns ranked
   snippets across projects, ideas, brand, and research.
-- > "Show me the full agentwatch overview." → `vault-read` returns the
+- > "Show me the full agentwatch overview." → `cora-read` returns the
   complete file or entry, not just snippets.
-- > "Where do things stand?" / "What's been happening?" → `vault-status`
+- > "Where do things stand?" / "What's been happening?" → `cora-status`
   summarises projects, open issues, and recent activity.
 
 ### Editing what already exists
@@ -241,9 +241,9 @@ When something in the vault is wrong rather than new:
 
 > "Fix the typo in the agentwatch style guide."
 
-The `vault-edit` skill makes a surgical in-place edit and confirms a
+The `cora-edit` skill makes a surgical in-place edit and confirms a
 before → after first. Traceability comes from version history. (New
-knowledge still goes through `vault-logger`, which resolves the
+knowledge still goes through `cora-logger`, which resolves the
 destination and breadcrumbs for you.)
 
 ### Activity & cross-module awareness
@@ -254,7 +254,7 @@ creation, but stays empty until the project actually has a module;
 standalone projects with no modules never populate it.
 
 - **Every module-scoped write of type `issue`, `resolution`, `progress`,
-  or `decision`** (via `vault-logger`) drops a breadcrumb in its
+  or `decision`** (via `cora-logger`) drops a breadcrumb in its
   **parent's** `ACTIVITY.md`. (`context` and `idea` writes don't — too
   noisy / domain-scoped. Writes to a standalone project never touch
   `ACTIVITY.md` at all — they only land in that project's own
@@ -269,21 +269,21 @@ blind to what its siblings have been doing.
 
 ### Moving things through their lifecycle
 
-- > "The offline-sync idea is shipped." → `vault-idea-status` advances the
+- > "The offline-sync idea is shipped." → `cora-idea-status` advances the
   idea and moves it to the shipped/archived section.
 - > "Mark agentwatch active." / "Archive the foo project." →
-  `vault-project-status` updates the status across `PROGRESS.md`,
+  `cora-project-status` updates the status across `PROGRESS.md`,
   `_INDEX.md`, and `AGENTS.md`; archiving relocates the folder to
   `projects/_archive/`.
 
 ### Setting up and reshaping projects
 
-- > "Create a new project called bar." → `vault-project-init` scaffolds
+- > "Create a new project called bar." → `cora-project-init` scaffolds
   the folder from the template and registers it.
-- > "Sync agent files for this repo." → `vault-project-sync` writes fresh
+- > "Sync agent files for this repo." → `cora-project-sync` writes fresh
   `CLAUDE.md`/`GEMINI.md`/etc. into the repo.
 - > "Rename agentwatch to agentscope." / "Move foo under bar." →
-  `vault-move` relocates the folder and repoints every reference and
+  `cora-move` relocates the folder and repoints every reference and
   `[[wikilink]]`. Re-run the sync afterward — agent files go stale on a
   move.
 
@@ -294,11 +294,11 @@ research** — articles, framework docs, technical analyses, your reading
 notes — in a separate `research/` layer with immutable sources and
 LLM-maintained topic synthesis pages.
 
-- > "Ingest the article I just clipped." → `vault-ingest` reads the source,
+- > "Ingest the article I just clipped." → `cora-ingest` reads the source,
   proposes which topic page(s) to update, and after your go-ahead writes
   the synthesis into `research/topics/{slug}.md`. Cross-links to relevant
   projects.
-- > "Lint the vault." → `vault-lint` reports orphan pages, stale topics,
+- > "Lint the vault." → `cora-lint` reports orphan pages, stale topics,
   unresolved source conflicts, missing topic pages, review backlog, and
   `AGENTS.md`/projects-folder drift. Read-only; fixes are your call.
 
@@ -314,7 +314,7 @@ Rather than scatter loose files into your project repo or promote
 everything piece-by-piece, the carry skill captures the whole thread
 as one piece.
 
-- > "Carry this session." → `vault-carry` reads the conversation,
+- > "Carry this session." → `cora-carry` reads the conversation,
   proposes a slug + scope (with you in the loop), then writes
   `sessions/{YYYY-MM-DD}-{slug}/SESSION.md` plus an `artifacts/` folder
   (code, diagrams, documents from the chat) and a `references/` folder
@@ -329,26 +329,26 @@ topic, or `general`. Not every session ties to a project.
   **not** auto-included in `CLAUDE.md`; loading is opt-in to keep agent
   files predictable.
 
-A session can be drawn down later — a decision written via `vault-logger`,
-a carried article ingested via `vault-ingest`, an artifact moved into
+A session can be drawn down later — a decision written via `cora-logger`,
+a carried article ingested via `cora-ingest`, an artifact moved into
 the project. The session itself stays as the historical trace.
 
-Sessions older than 60 days get flagged by `vault-lint` for manual
+Sessions older than 60 days get flagged by `cora-lint` for manual
 archival to `sessions/_archive/`.
 
 #### Loading sessions back into your IDE
 
 When you're working on a project and want past session context:
 
-- > "Load recent sessions for this project." → `vault-recall` lists the
+- > "Load recent sessions for this project." → `cora-recall` lists the
   3 most recent active sessions whose scope matches the current project
   (auto-detected from the working directory). Summary + key points +
   artifact filenames only — keeps agent context lean.
 - > "Recall sessions about the article series." →
-  `/vault-recall ideas/content` filters by an explicit scope prefix
+  `/cora-recall ideas/content` filters by an explicit scope prefix
   instead of the current project.
 - > "Load that push-proxy fix session in full." →
-  `/vault-recall full push-proxy-fix-discussion` pulls one session's
+  `/cora-recall full push-proxy-fix-discussion` pulls one session's
   `SESSION.md` and references; for artifacts >50KB total the skill
   lists them with sizes and lets you pick.
 
@@ -358,17 +358,17 @@ the skill mentions it in a one-line footer; you decide.
 
 #### Resuming a session in a fresh chat
 
-`vault-recall` assumes you're inside a project — it auto-detects the
+`cora-recall` assumes you're inside a project — it auto-detects the
 current project and filters sessions to that scope. When you open a
 **brand-new chat** with no project context and just want to pick up
-where you left off, use `vault-resume` instead. It makes no scope
+where you left off, use `cora-resume` instead. It makes no scope
 assumption:
 
-- > "Resume a session." / "What was I working on?" → `vault-resume`
+- > "Resume a session." / "What was I working on?" → `cora-resume`
   lists the most recent sessions across **all** scopes, you pick one,
   and it loads that session in full so you can continue the work.
 - > "Resume the push-proxy fix session." →
-  `/vault-resume push-proxy-fix` matches by slug or keyword and loads it
+  `/cora-resume push-proxy-fix` matches by slug or keyword and loads it
   directly if the match is unique.
 
 Like recall, resume is read-only and never auto-promotes. The
@@ -382,11 +382,11 @@ scope-agnostic.
 ```
 {vault_root}/
 ├── AGENTS.md                 ← Global agent entry point + Write Protocol
-├── .project-paths            ← One repo path per line (registered by /vault-init)
+├── .project-paths            ← One repo path per line (registered by /cora-init)
 ├── projects/
 │   ├── _INDEX.md
-│   ├── _TEMPLATE/            ← Template files used by /vault-init (incl. ACTIVITY.md)
-│   ├── _archive/             ← Retired projects (moved by /vault-project-status)
+│   ├── _TEMPLATE/            ← Template files used by /cora-init (incl. ACTIVITY.md)
+│   ├── _archive/             ← Retired projects (moved by /cora-project-status)
 │   └── {project}/            ← Top-level project
 │       ├── OVERVIEW.md       ← parent:/submodules: frontmatter declares relationships
 │       ├── STYLE.md
@@ -434,8 +434,8 @@ and both write the same files and frontmatter, so you can mix and match.
 
 ## The write contract
 
-Every write to the vault — new or edit — passes one gate: **RM sees it
-before it lands.** `vault-logger` proposes the full draft of every file
+Every write to the vault — new or edit — passes one gate: **you see it
+before it lands.** `cora-logger` proposes the full draft of every file
 it will touch, waits for explicit approval, then writes all destinations
 in one batched pass. There is no pending-review log, no `status:` field,
 and no separate promote step — inline review *is* the review.
@@ -461,14 +461,14 @@ full contract lives in the vault's `AGENTS.md`.
 
 ## Design notes
 
-- **Read-only skills** (`vault-status`, `vault-find`, `vault-read`) never
+- **Read-only skills** (`cora-status`, `cora-find`, `cora-read`) never
   write to the vault.
 - **Write skills** are append-only or transform-in-place — none ever
-  delete content. Archiving (`vault-project-status`) relocates content,
+  delete content. Archiving (`cora-project-status`) relocates content,
   never destroys it.
-- **Approval-gated by default.** No write lands without RM seeing the
-  exact text first. `vault-logger` shows the full draft and waits;
-  `vault-edit` confirms a before → after for non-trivial changes.
+- **Approval-gated by default.** No write lands without you seeing the
+  exact text first. `cora-logger` shows the full draft and waits;
+  `cora-edit` confirms a before → after for non-trivial changes.
 - **Cross-module awareness.** Submodule writes propagate to the parent
   implicitly and to named siblings explicitly, batched into one approval,
   so no module works blind to another.

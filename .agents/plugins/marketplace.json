@@ -5,10 +5,10 @@
   },
   "plugins": [
     {
-      "name": "rm-memory-vault",
+      "name": "cora",
       "source": {
         "source": "local",
-        "path": "./plugins/rm-memory-vault"
+        "path": "./plugins/cora"
       },
       "policy": {
         "installation": "AVAILABLE"

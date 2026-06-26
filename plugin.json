@@ -1,6 +1,6 @@
 {
-  "name": "rm-memory-vault",
-  "description": "Skills and slash commands for managing RM's Obsidian-based memory vault with any Copilot agent. Capture ideas and decisions via propose-then-write, init projects, sync agent files, and search the vault — all from chat.",
+  "name": "cora",
+  "description": "CORA (Continuity Of Recorded Activity) — skills and slash commands for managing RM's Obsidian-based memory vault with any Copilot agent. Capture ideas and decisions via propose-then-write, init projects, sync agent files, and search the vault — all from chat.",
   "version": "2.1.0",
   "author": {
     "name": "RM",
@@ -10,6 +10,7 @@
   "homepage": "https://github.com/RychidM/rm-memory-vault-plugin#readme",
   "repository": "https://github.com/RychidM/rm-memory-vault-plugin",
   "keywords": [
+    "cora",
     "obsidian",
     "memory",
     "vault",

@@ -18,7 +18,7 @@ manifests=(
   ".claude-plugin/marketplace.json:plugins[0].version"
   ".github/plugin/marketplace.json:plugins[0].version"
   "gemini-extension.json:version"
-  "plugins/rm-memory-vault/.codex-plugin/plugin.json:version"
+  "plugins/cora/.codex-plugin/plugin.json:version"
 )
 
 fail=0

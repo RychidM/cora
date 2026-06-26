@@ -1,0 +1,18 @@
+description = "Initialise a new project or module in the vault."
+prompt = """
+You are operating on the user's Obsidian memory vault. Read GEMINI.md (this extension's context file) for the vault location and path-resolution rules before acting.
+
+Follow this procedure. If `skills/cora-project-init/SKILL.md` exists in this extension directory, read it for the full algorithm and follow it precisely; otherwise use the summary below.
+
+Use the `cora-project-init` skill to create a new project from the
+template, register it in `_INDEX.md` and `AGENTS.md`, and optionally
+sync agent files to its repo.
+
+Argument syntax:
+- `/cora-init my-project [repo-path]` — top-level project
+- `/cora-init agentwatch/my-module [repo-path]` — module under a parent
+
+If parameters are missing, ask before creating files.
+
+User request / arguments: {{args}}
+"""

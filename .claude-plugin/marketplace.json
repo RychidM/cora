@@ -8,9 +8,9 @@
   "description": "RM's plugin marketplace.",
   "plugins": [
     {
-      "name": "rm-memory-vault",
+      "name": "cora",
       "source": "./",
-      "description": "Skills and slash commands for managing RM's Obsidian-based memory vault with any Claude agent. Capture ideas and decisions via propose-then-write, init projects, sync agent files, and search the vault — all from chat.",
+      "description": "CORA (Continuity Of Recorded Activity) — skills and slash commands for managing RM's Obsidian-based memory vault with any Claude agent. Capture ideas and decisions via propose-then-write, init projects, sync agent files, and search the vault — all from chat.",
       "version": "2.1.0",
       "author": {
         "name": "RM",
@@ -20,6 +20,7 @@
       "repository": "https://github.com/RychidM/rm-memory-vault-plugin",
       "license": "MIT",
       "keywords": [
+        "cora",
         "obsidian",
         "memory",
         "vault",
