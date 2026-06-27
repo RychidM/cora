@@ -48,7 +48,7 @@ manifest (and installation mechanism) each one reads differs. Pick your tool bel
 Reads `.claude-plugin/marketplace.json` + `.claude-plugin/plugin.json`.
 
 ```
-/plugin marketplace add RychidM/rm-memory-vault-plugin
+/plugin marketplace add RychidM/cora
 /plugin install cora@rm-plugins
 ```
 
@@ -61,7 +61,7 @@ are Claude Code CLI-only) — it has its own GUI flow that reads the same
 1. In a chat, click the **+** icon next to the message box.
 2. Select **Plugins → Add Plugin**. A dialog opens.
 3. In that dialog, select **Personal**, then click the **+** icon again.
-4. Choose **Add from a repository** and enter `RychidM/rm-memory-vault-plugin`
+4. Choose **Add from a repository** and enter `RychidM/cora`
    (or the full GitHub URL).
 5. Select `cora` from the marketplace and install.
 
@@ -77,7 +77,7 @@ Reads `.github/plugin/marketplace.json` + the root `plugin.json` (skills are
 discovered from `skills/`).
 
 ```
-/plugin marketplace add RychidM/rm-memory-vault-plugin
+/plugin marketplace add RychidM/cora
 /plugin install cora@rm-plugins
 ```
 
@@ -86,7 +86,7 @@ discovered from `skills/`).
 Reads `gemini-extension.json` + the TOML slash commands in `commands/`.
 
 ```bash
-gemini extensions install https://github.com/RychidM/rm-memory-vault-plugin
+gemini extensions install https://github.com/RychidM/cora
 # or, from a local clone:
 gemini extensions install .
 ```
@@ -97,7 +97,7 @@ Reads `.agents/plugins/marketplace.json` + the plugin manifest at
 `plugins/cora/.codex-plugin/plugin.json`.
 
 ```bash
-codex plugin marketplace add RychidM/rm-memory-vault-plugin
+codex plugin marketplace add RychidM/cora
 codex plugin add cora@rm-plugins
 ```
 
@@ -109,8 +109,8 @@ never committed.
 ### From this repository (local dev)
 
 ```bash
-git clone https://github.com/RychidM/rm-memory-vault-plugin.git
-cd rm-memory-vault-plugin
+git clone https://github.com/RychidM/cora.git
+cd cora
 
 # Claude
 ln -s "$(pwd)" ~/.claude/plugins/cora
