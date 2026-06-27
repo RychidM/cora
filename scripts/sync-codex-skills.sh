@@ -7,8 +7,8 @@
 set -euo pipefail
 root="$(cd "$(dirname "$0")/.." && pwd)"
 src="$root/skills"
-dest="$root/plugins/rm-memory-vault/skills"
+dest="$root/plugins/cora/skills"
 rm -rf "$dest"
 mkdir -p "$dest"
 cp -R "$src/." "$dest/"
-echo "Synced $(find "$src" -name SKILL.md | wc -l | tr -d ' ') skills -> plugins/rm-memory-vault/skills/"
+echo "Synced $(find "$src" -name SKILL.md | wc -l | tr -d ' ') skills -> plugins/cora/skills/"

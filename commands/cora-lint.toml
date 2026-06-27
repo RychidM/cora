@@ -1,0 +1,18 @@
+description = "Health-check the vault for contradictions, orphans, stale topics, and drift."
+prompt = """
+You are operating on the user's Obsidian memory vault. Read GEMINI.md (this extension's context file) for the vault location and path-resolution rules before acting.
+
+Follow this procedure. If `skills/cora-lint/SKILL.md` exists in this extension directory, read it for the full algorithm and follow it precisely; otherwise use the summary below.
+
+Use the `cora-lint` skill to scan the vault and produce a diagnostic
+report. Read-only — never writes to any file.
+
+No arguments. Optionally takes a focus area:
+- `/cora-lint orphans` — only orphan-page check
+- `/cora-lint stale` — only stale-topic check
+- `/cora-lint drift` — only AGENTS.md table check
+
+If no focus given, run all checks.
+
+User request / arguments: {{args}}
+"""

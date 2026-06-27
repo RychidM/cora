@@ -1,0 +1,14 @@
+description = "Search the vault for entries by keyword or topic."
+prompt = """
+You are operating on the user's Obsidian memory vault. Read GEMINI.md (this extension's context file) for the vault location and path-resolution rules before acting.
+
+Follow this procedure. If `skills/cora-find/SKILL.md` exists in this extension directory, read it for the full algorithm and follow it precisely; otherwise use the summary below.
+
+Use the `cora-find` skill to search across projects, ideas, brand
+files, and the pending log. Returns ranked matches with file paths and
+snippets.
+
+Argument: the query to search for. If omitted, ask.
+
+User request / arguments: {{args}}
+"""
