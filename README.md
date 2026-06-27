@@ -1,17 +1,17 @@
 # CORA — Continuity Of Recorded Activity
 
-A Claude, Copilot and Gemini CLI plugin that turns your Obsidian-based memory vault into a
-first-class agent capability. Capture ideas and decisions, sync agent
-files to project repos, search the vault, and manage projects — all from
-chat with any Claude agent (Claude Code, Claude desktop), Copilot, or Gemini CLI. Writes are
-proposed inline and land in their destination on your approval; there is
-no pending-review queue.
+CORA is the companion to [cora-vault](https://github.com/RychidM/cora-vault) —
+the operational controls for it. Where cora-vault is the memory vault itself,
+CORA is the set of tools you use to work with it from chat: capture ideas and
+decisions, sync agent files to project repos, search the vault, and manage
+projects — across Claude (Claude Code, Claude Desktop), GitHub Copilot,
+Gemini CLI, and OpenAI Codex.
 
 ---
 
 ## What this plugin does
 
-The vault is a structured Obsidian repository that holds your projects,
+The vault is a structured set of Markdown files that holds your projects,
 ideas, identity, research, and per-project activity feeds. Without this
 plugin, every operation on the vault is manual: write entries to the
 right file, propagate cross-module breadcrumbs, update indexes,
@@ -423,12 +423,14 @@ sessions/
     └── references/           ← External materials carried with the session
 ```
 
-If you don't have this structure yet, the
-[cora-vault](https://github.com/RychidM/cora-vault)
-starter sets it up. Its `scripts/` (`init-project.sh`, `sync-memory.sh`,
-`memory-wrappers.sh`) cover the same operations from a plain shell, no
-agent required — this plugin's skills are the agent-driven equivalent,
-and both write the same files and frontmatter, so you can mix and match.
+If you don't have this structure yet, clone the
+[cora-vault](https://github.com/RychidM/cora-vault) starter and run its
+`setup.sh` — that's what scaffolds the vault. From there, the starter's
+other scripts cover the per-project operations from a plain shell, no agent
+required: `init-project.sh` (scaffold a project), `sync-memory.sh` (generate
+per-repo agent files), and `memory-wrappers.sh` (keep those files fresh).
+Those map to this plugin's `/cora-init` and `/cora-sync` skills — both write
+the same files and frontmatter, so you can mix and match.
 
 ---
 
