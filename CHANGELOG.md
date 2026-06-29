@@ -9,11 +9,16 @@
 - Shared `scripts/cora-session-start.sh` helper that resolves the vault,
   finds the project, reads the correct `ACTIVITY.md` and `sessions/_INDEX.md`,
   and emits a formatted mandatory context block.
-- Fallback `MANDATORY SESSION START CONTEXT` block at the top of every
-  generated agent instruction file, so the recap is still visible when a hook
-  is disabled or fails.
-
 ### Changed
+- Removed static `MANDATORY SESSION START CONTEXT` fallback block from generated
+  agent files; session context is handled exclusively by the per-agent SessionStart
+  hooks.
+- Replaced `## Session Start Protocol` in `AGENTS.md` with a single-line
+  `## Session Context` note — the manual steps are now redundant.
+- `sync-memory.sh` now extracts only the core portion of `AGENTS.md` (content
+  above a `<!-- sync-end -->` marker) into generated agent files; reference
+  sections (Active Projects, Ideas Bank, Research Library, Sessions) are
+  vault-only and no longer contribute to per-project context size.
 - `cora-project-sync` and `sync-memory.sh` now write agent files to
   per-agent directories (`.claude/`, `.gemini/`, `.codex/`) instead of the
   repo root, matching each agent's documented path conventions.
