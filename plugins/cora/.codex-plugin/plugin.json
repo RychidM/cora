@@ -1,6 +1,6 @@
 {
   "name": "cora",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "CORA (Continuity Of Recorded Activity) \u2014 skills for managing your Obsidian-based memory vault with Codex. Capture ideas and decisions via propose-then-write, init projects, sync agent files, and search the vault \u2014 all from chat.",
   "author": {
     "name": "RM",
