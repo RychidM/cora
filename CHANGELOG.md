@@ -1,5 +1,32 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+- Per-agent `SessionStart` hooks for Claude Code, OpenAI Codex, Gemini CLI,
+  and GitHub Copilot CLI. Each hook computes and injects the activity recap
+  since the last session at startup.
+- Shared `scripts/cora-session-start.sh` helper that resolves the vault,
+  finds the project, reads the correct `ACTIVITY.md` and `sessions/_INDEX.md`,
+  and emits a formatted mandatory context block.
+### Changed
+- Removed static `MANDATORY SESSION START CONTEXT` fallback block from generated
+  agent files; session context is handled exclusively by the per-agent SessionStart
+  hooks.
+- Replaced `## Session Start Protocol` in `AGENTS.md` with a single-line
+  `## Session Context` note — the manual steps are now redundant.
+- `sync-memory.sh` now extracts only the core portion of `AGENTS.md` (content
+  above a `<!-- sync-end -->` marker) into generated agent files; reference
+  sections (Active Projects, Ideas Bank, Research Library, Sessions) are
+  vault-only and no longer contribute to per-project context size.
+- `cora-project-sync` and `sync-memory.sh` now write agent files to
+  per-agent directories (`.claude/`, `.gemini/`, `.codex/`) instead of the
+  repo root, matching each agent's documented path conventions.
+- `.gitignore` entries updated to cover the new per-agent directories and
+  hook files.
+- Existing user hooks (e.g. `.github/hooks/hooks.json`) are left untouched;
+  CORA hooks are installed as separate files.
+
 ## [1.0.0] — 2026-06-27
 
 First release of **CORA** (Continuity Of Recorded Activity) — the companion
