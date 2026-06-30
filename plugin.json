@@ -1,7 +1,7 @@
 {
   "name": "cora",
   "description": "CORA (Continuity Of Recorded Activity) — skills and slash commands for managing your Obsidian-based memory vault with any Copilot agent. Capture ideas and decisions via propose-then-write, init projects, sync agent files, and search the vault — all from chat.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "RM",
     "url": "https://github.com/RychidM"
