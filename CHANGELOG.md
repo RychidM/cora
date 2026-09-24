@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.0.2] - 2026-09-24
+
+### Fixed
+- Removed a personal AgentWatch hook (`.github/hooks/hooks.json`) that was
+  accidentally shipped in the Copilot manifest and ran
+  `node ~/.agentwatch/hook.js` on every tool use, prompt, and session event.
+- `plugin.json` no longer references the deleted hooks file.
+
+### Removed
+- Stray `typescript` terminal transcript committed by mistake.
+
 ## [1.0.1] - 2026-06-30
 
 ### Added
